@@ -39,7 +39,7 @@
 </head>
 <body class="bg-ivory text-charcoal antialiased">
 
-    <!-- AUTHENTICATION SCREEN (Hidden if logged in) -->
+    <!-- AUTHENTICATION SCREEN -->
     <div id="auth-screen" class="fixed inset-0 z-50 bg-charcoal flex items-center justify-center p-4">
         <div class="bg-ivory max-w-md w-full p-8 rounded-lg shadow-2xl border border-gold/30">
             <div class="text-center mb-8">
@@ -49,7 +49,7 @@
             <form id="login-form" class="space-y-4 text-xs uppercase tracking-wider">
                 <div>
                     <label class="block font-semibold mb-1">Admin Email *</label>
-                    <input type="email" id="admin-email" required placeholder="admin@luxera.com" class="w-full bg-white border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold">
+                    <input type="email" id="admin-email" required value="admin@gmail.com" placeholder="admin@gmail.com" class="w-full bg-white border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold">
                 </div>
                 <div>
                     <label class="block font-semibold mb-1">Password *</label>
@@ -61,25 +61,25 @@
         </div>
     </div>
 
-    <!-- MAIN ADMIN DASHBOARD (Hidden until authenticated) -->
+    <!-- MAIN ADMIN DASHBOARD -->
     <div id="admin-dashboard" class="hidden min-h-screen flex flex-col justify-between">
         <div>
             <!-- Top Bar -->
             <header class="bg-charcoal text-white py-4 px-6 flex justify-between items-center shadow-md">
                 <div class="flex items-center gap-3">
                     <span class="font-serif text-xl font-bold tracking-widest">LUXERA ADMIN</span>
-                    <span class="bg-gold text-charcoal text-[10px] font-bold px-2 py-0.5 rounded uppercase">Secure Portal</span>
+                    <span class="bg-gold text-charcoal text-[10px] font-bold px-2 py-0.5 rounded uppercase">Cloud Sync Portal</span>
                 </div>
                 <div class="flex items-center gap-4">
                     <a href="index.html" target="_blank" class="text-xs uppercase tracking-widest text-gold hover:text-white transition-colors flex items-center gap-2">
-                        <i class="fa-solid fa-store"></i> Storefront
+                        <i class="fa-solid fa-store"></i> View Storefront
                     </a>
                     <button onclick="adminLogout()" class="text-xs uppercase tracking-widest text-red-400 hover:text-red-200"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
                 </div>
             </header>
 
             <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
-                <!-- Tabs -->
+                <!-- Navigation Tabs -->
                 <div class="flex border-b border-gold/30 gap-6 text-xs uppercase tracking-widest font-semibold overflow-x-auto">
                     <button onclick="switchTab('products')" id="tab-products-btn" class="pb-3 border-b-2 border-gold text-gold transition-all shrink-0">Manage Products</button>
                     <button onclick="switchTab('categories')" id="tab-categories-btn" class="pb-3 border-b-2 border-transparent text-charcoal/60 hover:text-charcoal transition-all shrink-0">Categories</button>
@@ -114,7 +114,7 @@
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block font-semibold mb-1">Upload Product Image (File) *</label>
+                                    <label class="block font-semibold mb-1">Select Product Image (File) *</label>
                                     <input type="file" id="prod-file" accept="image/*" required class="w-full bg-ivory border border-gold/30 p-2.5 text-xs font-sans focus:outline-none">
                                 </div>
                                 <div>
@@ -126,12 +126,12 @@
                                 <label class="block font-semibold mb-1">Sizes / Capacities (Comma separated)</label>
                                 <input type="text" id="prod-sizes" placeholder="Small, Medium, Large" class="w-full bg-ivory border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold">
                             </div>
-                            <button type="submit" id="publish-btn" class="bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs px-8 py-4 transition-all shadow-md">Publish Product</button>
+                            <button type="submit" id="publish-btn" class="bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs px-8 py-4 transition-all shadow-md">Publish Product to Cloud</button>
                         </form>
                     </div>
 
                     <div class="bg-white rounded-lg shadow-sm border border-gold/25 overflow-hidden">
-                        <div class="p-6 border-b border-gold/20"><h3 class="font-serif text-lg font-bold tracking-wide">Catalogue Items</h3></div>
+                        <div class="p-6 border-b border-gold/20"><h3 class="font-serif text-lg font-bold tracking-wide">Live Products Catalogue</h3></div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs uppercase tracking-wider">
                                 <thead class="bg-cream text-charcoal font-semibold border-b border-gold/20">
@@ -152,7 +152,7 @@
                                 <label class="block font-semibold mb-1 text-xs uppercase tracking-wider">Category Name *</label>
                                 <input type="text" id="cat-name" required placeholder="Cufflinks" class="w-full bg-ivory border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold">
                             </div>
-                            <button type="submit" class="bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs px-8 py-3.5 transition-all shadow-md">Add</button>
+                            <button type="submit" class="bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs px-8 py-3.5 transition-all shadow-md">Add Category</button>
                         </form>
                     </div>
                     <div class="bg-white rounded-lg shadow-sm border border-gold/20 p-6 grid grid-cols-1 md:grid-cols-3 gap-4" id="admin-category-grid"></div>
@@ -165,23 +165,23 @@
                         <form id="banner-form" class="space-y-4 text-xs uppercase tracking-wider">
                             <div>
                                 <label class="block font-semibold mb-1">Top Announcement Bar Text *</label>
-                                <input type="text" id="setting-announcement" placeholder="Complimentary Free Shipping on Orders Above Rs. 5,000 | WhatsApp: 03005460203" class="w-full bg-ivory border border-gold/30 p-3 text-xs lowercase font-sans focus:outline-none focus:border-gold">
+                                <input type="text" id="setting-announcement" class="w-full bg-ivory border border-gold/30 p-3 text-xs lowercase font-sans focus:outline-none focus:border-gold">
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block font-semibold mb-1">Hero Section Title *</label>
-                                    <input type="text" id="setting-hero-title" placeholder="TIMELINE OF ELEGANCE" class="w-full bg-ivory border border-gold/30 p-3 text-xs lowercase font-sans focus:outline-none focus:border-gold">
+                                    <input type="text" id="setting-hero-title" class="w-full bg-ivory border border-gold/30 p-3 text-xs lowercase font-sans focus:outline-none focus:border-gold">
                                 </div>
                                 <div>
                                     <label class="block font-semibold mb-1">Hero Section Subtitle *</label>
-                                    <input type="text" id="setting-hero-subtitle" placeholder="Discover curated luxury men's accessories..." class="w-full bg-ivory border border-gold/30 p-3 text-xs lowercase font-sans focus:outline-none focus:border-gold">
+                                    <input type="text" id="setting-hero-subtitle" class="w-full bg-ivory border border-gold/30 p-3 text-xs lowercase font-sans focus:outline-none focus:border-gold">
                                 </div>
                             </div>
                             <div>
-                                <label class="block font-semibold mb-1">Global Sale Banner Tag (Leave blank to disable)</label>
-                                <input type="text" id="setting-sale-tag" placeholder="SUMMER LUXURY SALE - UP TO 25% OFF" class="w-full bg-ivory border border-gold/30 p-3 text-xs lowercase font-sans focus:outline-none focus:border-gold">
+                                <label class="block font-semibold mb-1">Global Sale Banner Tag</label>
+                                <input type="text" id="setting-sale-tag" class="w-full bg-ivory border border-gold/30 p-3 text-xs lowercase font-sans focus:outline-none focus:border-gold">
                             </div>
-                            <button type="submit" class="bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs px-8 py-3.5 transition-all shadow-md">Save Banner & Sale Settings</button>
+                            <button type="submit" class="bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs px-8 py-3.5 transition-all shadow-md">Save Settings</button>
                         </form>
                     </div>
                 </section>
@@ -191,28 +191,26 @@
                     <div class="bg-white rounded-lg shadow-sm border border-gold/20 overflow-hidden">
                         <div class="p-6 border-b border-gold/20 flex justify-between items-center">
                             <h3 class="font-serif text-lg font-bold tracking-wide">Customer Orders Log</h3>
-                            <button onclick="clearOrders()" class="text-[10px] text-red-600 hover:underline uppercase font-bold">Clear Orders</button>
                         </div>
                         <div id="admin-orders-container" class="p-6 space-y-4"></div>
                     </div>
                 </section>
             </main>
         </div>
-        <footer class="bg-charcoal text-white text-center py-4 text-xs font-light">
+
+        <footer class="bg-charcoal text-white text-center py-4 text-xs font-light border-t border-gold/20">
             &copy; 2026 LUXERA Secure Admin Portal.
         </footer>
     </div>
 
-    <!-- SUPABASE CONFIG & LOGIC -->
     <script>
-        // Supabase Credentials (Replace with your actual Supabase URL and Anon Key)
         const SUPABASE_URL = 'https://phpwaqvoklllsfsdlcax.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_d-WohZctDC6XEoRXt9IAyg_Cb37pYMu';
-        
+        const IMGBB_API_KEY = '6d207e02194a847d9b7473138b38515c';
+
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // Check active session
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session) {
                 document.getElementById('auth-screen').classList.add('hidden');
@@ -220,14 +218,13 @@
                 loadAdminData();
             }
 
-            // Login form listener
             document.getElementById('login-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const email = document.getElementById('admin-email').value;
                 const password = document.getElementById('admin-password').value;
                 const errBox = document.getElementById('auth-error');
 
-                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
                 if (error) {
                     errBox.innerText = error.message;
                     errBox.classList.remove('hidden');
@@ -258,65 +255,74 @@
         }
 
         async function loadAdminData() {
-            // Load Categories
-            let categories = JSON.parse(localStorage.getItem('luxera_categories') || '[]');
+            // Load Categories from Supabase
+            const { data: categories } = await supabaseClient.from('categories').select('*');
             const catSelect = document.getElementById('prod-category');
-            catSelect.innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            if (categories) {
+                catSelect.innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+                document.getElementById('admin-category-grid').innerHTML = categories.map(c => `
+                    <div class="flex justify-between items-center bg-cream p-4 rounded border border-gold/20 text-xs uppercase font-bold">
+                        <span>${c.name}</span>
+                        <button onclick="deleteCategory('${c.id}')" class="text-red-600"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `).join('');
+            }
 
-            const catGrid = document.getElementById('admin-category-grid');
-            catGrid.innerHTML = categories.map(c => `
-                <div class="flex justify-between items-center bg-cream p-4 rounded border border-gold/20 text-xs uppercase font-bold">
-                    <span>${c.name}</span>
-                    <button onclick="deleteCategory('${c.id}')" class="text-red-600"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            `).join('');
+            // Load Products from Supabase
+            const { data: products } = await supabaseClient.from('products').select('*');
+            if (products) {
+                document.getElementById('admin-product-table').innerHTML = products.map(p => `
+                    <tr class="hover:bg-cream/50">
+                        <td class="p-4"><img src="${p.primary_image}" class="w-12 h-12 object-cover rounded"></td>
+                        <td class="p-4 font-bold">${p.name}</td>
+                        <td class="p-4">${p.category_id}</td>
+                        <td class="p-4 font-semibold text-gold">Rs. ${Number(p.sale_price || p.regular_price).toLocaleString()}</td>
+                        <td class="p-4 text-right"><button onclick="deleteProduct('${p.id}')" class="text-red-600 p-2"><i class="fa-solid fa-trash"></i></button></td>
+                    </tr>
+                `).join('');
+            }
 
-            // Load Products
-            let products = JSON.parse(localStorage.getItem('luxera_products') || '[]');
-            const prodTable = document.getElementById('admin-product-table');
-            prodTable.innerHTML = products.map(p => `
-                <tr class="hover:bg-cream/50">
-                    <td class="p-4"><img src="${p.primary_image}" class="w-12 h-12 object-cover rounded"></td>
-                    <td class="p-4 font-bold">${p.name}</td>
-                    <td class="p-4">${p.category_id}</td>
-                    <td class="p-4 font-semibold text-gold">Rs. ${Number(p.sale_price || p.regular_price).toLocaleString()}</td>
-                    <td class="p-4 text-right"><button onclick="deleteProduct('${p.id}')" class="text-red-600 p-2"><i class="fa-solid fa-trash"></i></button></td>
-                </tr>
-            `).join('');
-
-            // Load Banners Settings
-            const settings = JSON.parse(localStorage.getItem('luxera_settings') || '{}');
-            document.getElementById('setting-announcement').value = settings.announcement || '';
-            document.getElementById('setting-hero-title').value = settings.heroTitle || '';
-            document.getElementById('setting-hero-subtitle').value = settings.heroSubtitle || '';
-            document.getElementById('setting-sale-tag').value = settings.saleTag || '';
-
-            // Load Orders
-            let orders = JSON.parse(localStorage.getItem('luxera_orders') || '[]');
+            // Load Orders from Supabase
+            const { data: orders } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false });
             const ordersContainer = document.getElementById('admin-orders-container');
-            if (orders.length === 0) {
-                ordersContainer.innerHTML = `<div class="text-center py-8 text-charcoal/50 text-xs uppercase">No customer orders yet.</div>`;
+            if (!orders || orders.length === 0) {
+                ordersContainer.innerHTML = `<div class="text-center py-8 text-charcoal/50 text-xs uppercase">No customer orders recorded yet.</div>`;
             } else {
                 ordersContainer.innerHTML = orders.map(o => `
                     <div class="bg-cream p-6 rounded-lg border border-gold/20 text-xs uppercase tracking-wider space-y-1">
                         <div class="flex justify-between font-bold border-b border-gold/20 pb-2 text-gold">
-                            <span>Order #${o.order_number}</span><span>Rs. ${Number(o.total_amount).toLocaleString()} (${o.payment_method})</span>
+                            <span>Order #${o.order_number}</span><span>Rs. ${Number(o.total_amount).toLocaleString()}</span>
                         </div>
                         <div><strong>Customer:</strong> ${o.customer_name} (${o.whatsapp_number})</div>
                         <div><strong>Address:</strong> ${o.shipping_address}</div>
+                        <div><strong>Payment Method:</strong> <span class="text-charcoal font-bold">${o.payment_method}</span></div>
                     </div>
                 `).join('');
             }
         }
 
         function initAdminForms() {
-            // Add Product Form with Supabase Storage File Upload
             document.getElementById('add-product-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const btn = document.getElementById('publish-btn');
-                btn.innerText = 'Uploading Image & Publishing...';
+                btn.innerText = 'Uploading Image & Saving...';
                 btn.disabled = true;
 
+                const fileInput = document.getElementById('prod-file').files[0];
+                const formData = new FormData();
+                formData.append('image', fileInput);
+
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
+                const result = await response.json();
+
+                if (!result.success) {
+                    alert('Image upload failed');
+                    btn.innerText = 'Publish Product to Cloud';
+                    btn.disabled = false;
+                    return;
+                }
+
+                const imageUrl = result.data.url;
                 const name = document.getElementById('prod-name').value;
                 const category_id = document.getElementById('prod-category').value;
                 const regular_price = Number(document.getElementById('prod-reg-price').value);
@@ -324,24 +330,8 @@
                 const sale_price = sale_val ? Number(sale_val) : null;
                 const colors = document.getElementById('prod-colors').value.split(',').map(s => s.trim()).filter(Boolean);
                 const sizes = document.getElementById('prod-sizes').value.split(',').map(s => s.trim()).filter(Boolean);
-                const fileInput = document.getElementById('prod-file').files[0];
 
-                let imageUrl = '';
-                if (fileInput) {
-                    const fileName = `prod_${Date.now()}_${fileInput.name}`;
-                    const { data, error } = await supabaseClient.storage.from('products').upload(fileName, fileInput);
-                    if (error) {
-                        alert('Image upload failed: ' + error.message);
-                        btn.innerText = 'Publish Product';
-                        btn.disabled = false;
-                        return;
-                    }
-                    const { data: publicURLData } = supabaseClient.storage.from('products').getPublicUrl(fileName);
-                    imageUrl = publicURLData.publicUrl;
-                }
-
-                let products = JSON.parse(localStorage.getItem('luxera_products') || '[]');
-                products.push({
+                const newProd = {
                     id: 'p_' + Date.now(),
                     category_id,
                     name,
@@ -351,60 +341,34 @@
                     gallery: [imageUrl],
                     colors: colors.length > 0 ? colors : ['Standard'],
                     sizes: sizes.length > 0 ? sizes : ['Standard']
-                });
+                };
 
-                localStorage.setItem('luxera_products', JSON.stringify(products));
-                alert('Product successfully published with Supabase storage image!');
+                await supabaseClient.from('products').insert([newProd]);
+                alert('Product published to Supabase Cloud!');
                 window.location.reload();
             });
 
-            // Add Category
-            document.getElementById('add-category-form').addEventListener('submit', (e) => {
+            document.getElementById('add-category-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const name = document.getElementById('cat-name').value.trim();
                 const id = 'cat_' + name.toLowerCase().replace(/\s+/g, '_');
-                let categories = JSON.parse(localStorage.getItem('luxera_categories') || '[]');
-                categories.push({ id, name });
-                localStorage.setItem('luxera_categories', JSON.stringify(categories));
-                alert('Category added!');
+
+                await supabaseClient.from('categories').insert([{ id, name }]);
+                alert('Category added to Cloud!');
                 window.location.reload();
             });
-
-            // Banner & Sale Settings
-            document.getElementById('banner-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const settings = {
-                    announcement: document.getElementById('setting-announcement').value,
-                    heroTitle: document.getElementById('setting-hero-title').value,
-                    heroSubtitle: document.getElementById('setting-hero-subtitle').value,
-                    saleTag: document.getElementById('setting-sale-tag').value
-                };
-                localStorage.setItem('luxera_settings', JSON.stringify(settings));
-                alert('Store banners & sale settings saved successfully!');
-            });
         }
 
-        function deleteProduct(id) {
+        async function deleteProduct(id) {
             if (confirm('Delete this product?')) {
-                let products = JSON.parse(localStorage.getItem('luxera_products') || '[]');
-                products = products.filter(p => p.id !== id);
-                localStorage.setItem('luxera_products', JSON.stringify(products));
+                await supabaseClient.from('products').delete().eq('id', id);
                 loadAdminData();
             }
         }
 
-        function deleteCategory(id) {
-            if (confirm('Delete category?')) {
-                let categories = JSON.parse(localStorage.getItem('luxera_categories') || '[]');
-                categories = categories.filter(c => c.id !== id);
-                localStorage.setItem('luxera_categories', JSON.stringify(categories));
-                loadAdminData();
-            }
-        }
-
-        function clearOrders() {
-            if (confirm('Clear all orders?')) {
-                localStorage.removeItem('luxera_orders');
+        async function deleteCategory(id) {
+            if (confirm('Delete this category?')) {
+                await supabaseClient.from('categories').delete().eq('id', id);
                 loadAdminData();
             }
         }

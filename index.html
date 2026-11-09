@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -41,37 +43,28 @@
 <body class="bg-ivory text-charcoal antialiased selection:bg-gold selection:text-white">
 
     <!-- Top Announcement Bar -->
-    <div class="bg-charcoal text-white text-[11px] py-2 px-4 text-center tracking-[0.2em] uppercase font-medium">
-        Complimentary Free Shipping on Orders Above Rs. 5,000 | WhatsApp: <span id="top-whatsapp">03005460203</span>
+    <div id="announcement-bar" class="bg-charcoal text-white text-[11px] py-2 px-4 text-center tracking-[0.2em] uppercase font-medium">
+        Complimentary Free Shipping on Orders Above Rs. 5,000 | WhatsApp: 03005460203
     </div>
 
-    <!-- Sticky Navigation Bar (Clean, Admin Icon Removed) -->
+    <!-- Sticky Navigation Bar -->
     <header class="sticky top-0 z-40 bg-ivory/95 backdrop-blur-md border-b border-gold/20 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
-            <!-- Mobile Menu Toggle Button -->
             <button id="mobile-menu-btn" class="lg:hidden text-charcoal hover:text-gold text-xl p-2 focus:outline-none">
                 <i class="fa-solid fa-bars"></i>
             </button>
-
-            <!-- Brand Logo -->
             <a href="index.html" class="font-serif text-2xl md:text-3xl font-bold tracking-[0.25em] text-charcoal shrink-0">
                 LUXERA
             </a>
-
-            <!-- Search Bar in Navbar -->
             <div class="relative flex-1 max-w-xs md:max-w-md mx-2">
                 <input type="text" id="navbar-search" placeholder="Search watches, perfumes, wallets..." class="w-full bg-white/80 border border-gold/30 rounded-full py-2 pl-10 pr-4 text-xs font-sans focus:outline-none focus:border-gold transition-all shadow-sm">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gold text-xs"></i>
                 <button id="clear-search-btn" class="hidden absolute right-3 top-2.5 text-xs text-charcoal/50 hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button>
             </div>
-
-            <!-- Desktop Navigation Links -->
             <nav id="desktop-nav" class="hidden lg:flex items-center space-x-6 font-medium text-xs tracking-[0.2em] uppercase shrink-0">
                 <a href="index.html" class="hover:text-gold transition-colors">Home</a>
                 <div id="desktop-cat-links" class="flex items-center space-x-6"></div>
             </nav>
-
-            <!-- Action Icons -->
             <div class="flex items-center space-x-4 text-lg shrink-0">
                 <button id="cart-btn" class="relative hover:text-gold transition-colors p-2 focus:outline-none">
                     <i class="fa-solid fa-bag-shopping text-xl"></i>
@@ -103,9 +96,9 @@
     <!-- Hero Section -->
     <section class="relative bg-charcoal text-white py-28 md:py-36 bg-cover bg-center" style="background-image: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1920&auto=format&fit=crop');">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <span class="text-gold uppercase tracking-[0.3em] text-xs font-semibold mb-4 block">Crafted For Distinction</span>
-            <h1 class="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-wider mb-6">TIMELINE OF ELEGANCE</h1>
-            <p class="text-gray-300 max-w-2xl mx-auto text-sm md:text-base mb-10 font-light leading-relaxed">Discover curated luxury men's accessories designed for the modern gentleman.</p>
+            <span id="hero-sale-tag" class="text-gold uppercase tracking-[0.3em] text-xs font-semibold mb-4 block">Crafted For Distinction</span>
+            <h1 id="hero-title" class="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-wider mb-6">TIMELINE OF ELEGANCE</h1>
+            <p id="hero-subtitle" class="text-gray-300 max-w-2xl mx-auto text-sm md:text-base mb-10 font-light leading-relaxed">Discover curated luxury men's accessories designed for the modern gentleman.</p>
             <a href="#shop" class="inline-block bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs px-8 py-4 transition-all shadow-lg hover:shadow-xl">Explore Collection</a>
         </div>
     </section>
@@ -118,19 +111,15 @@
             <div class="w-16 h-[2px] bg-gold mx-auto mt-4"></div>
         </div>
 
-        <!-- Flexible Category Slider -->
         <div class="w-full overflow-x-auto pb-4 mb-12">
             <div id="category-filter-tabs" class="flex items-center justify-start md:justify-center gap-3 min-w-max px-2"></div>
         </div>
 
-        <!-- Search Results Count Banner -->
         <div id="search-status" class="hidden mb-6 text-center text-xs uppercase tracking-widest text-charcoal/70"></div>
-
-        <!-- Product Grid -->
         <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8"></div>
     </main>
 
-    <!-- Footer (Instagram Link Added, Admin Portal Removed) -->
+    <!-- Footer -->
     <footer class="bg-charcoal text-white pt-16 pb-12 border-t border-gold/25 mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
             <div>
@@ -180,7 +169,7 @@
         </div>
     </div>
 
-    <!-- Checkout Modal with Funny COD & Manual Advance Payment Instructions -->
+    <!-- Checkout Modal -->
     <div id="checkout-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
         <div class="bg-ivory max-w-2xl w-full rounded-lg shadow-2xl overflow-hidden relative max-h-[95vh] flex flex-col">
             <div class="p-6 bg-charcoal text-white flex items-center justify-between">
@@ -197,8 +186,6 @@
                     <div><label class="block font-semibold mb-1">City *</label><input type="text" id="chk-city" required class="w-full bg-white border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold"></div>
                     <div><label class="block font-semibold mb-1">Province / State *</label><input type="text" id="chk-province" required class="w-full bg-white border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold"></div>
                 </div>
-
-                <!-- Payment Method Selection -->
                 <div>
                     <label class="block font-semibold mb-2">Select Payment Method *</label>
                     <select id="chk-payment-method" onchange="updatePaymentNote()" class="w-full bg-white border border-gold/30 p-3 text-xs uppercase tracking-wider font-sans focus:outline-none focus:border-gold">
@@ -208,13 +195,10 @@
                         <option value="Bank Transfer (Meezan / HBL)">Direct Bank Transfer</option>
                     </select>
                 </div>
-
-                <!-- Dynamic Payment Instructions Box -->
                 <div id="payment-instruction-box" class="bg-cream p-4 border border-gold/30 rounded normal-case text-[11px] space-y-1 text-charcoal/80">
                     <p class="font-semibold uppercase text-gold mb-1">Payment Instructions:</p>
-                    <p id="payment-note-text">• **COD**: Main qasam khata hoon ke main order lazmi receive karunga! ?? Pay cash upon delivery.</p>
+                    <p id="payment-note-text">• **COD**: Main qasam khata hoon ke main order lazmi receive karunga! 🤝 Pay cash upon delivery.</p>
                 </div>
-
                 <button type="submit" class="w-full bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs py-4 transition-all shadow-md">Complete Order & Generate Receipt</button>
             </form>
         </div>
@@ -237,119 +221,45 @@
         </div>
     </div>
 
-    <!-- Application Script -->
+    <!-- Supabase Storefront Logic -->
     <script>
-        const defaultCategories = [
-            { id: 'cat-watches', name: 'Watches' },
-            { id: 'cat-perfumes', name: 'Perfumes' },
-            { id: 'cat-clothing', name: 'Clothing' },
-            { id: 'cat-wallets', name: 'Wallets' }
-        ];
+        const SUPABASE_URL = 'https://phpwaqvoklllsfsdlcax.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_d-WohZctDC6XEoRXt9IAyg_Cb37pYMu';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const defaultProducts = [
-            {
-                id: 'p1', category_id: 'cat-watches', name: 'Royal Chronograph Gold', regular_price: 18500, sale_price: 14999,
-                primary_image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600',
-                gallery: [
-                    'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600',
-                    'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600',
-                    'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600'
-                ],
-                is_bestseller: true,
-                colors: ['Yellow Gold', 'Rose Gold', 'Silver Steel'],
-                sizes: ['40mm Case', '42mm Case']
-            },
-            {
-                id: 'p2', category_id: 'cat-watches', name: 'Executive Silver Tourbillon', regular_price: 21000, sale_price: 17999,
-                primary_image: 'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=600',
-                gallery: [
-                    'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=600',
-                    'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600'
-                ],
-                is_new_arrival: true,
-                colors: ['Stainless Silver', 'Midnight Black'],
-                sizes: ['42mm Case']
-            },
-            {
-                id: 'p3', category_id: 'cat-perfumes', name: 'Oud Al Sultan Eau de Parfum', regular_price: 9500, sale_price: null,
-                primary_image: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600',
-                gallery: [
-                    'https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600',
-                    'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600'
-                ],
-                is_bestseller: true,
-                colors: ['Amber Bottle'],
-                sizes: ['50ml Spray', '100ml Spray']
-            },
-            {
-                id: 'p4', category_id: 'cat-perfumes', name: 'Royal Noir Extrait de Parfum', regular_price: 12000, sale_price: 9999,
-                primary_image: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600',
-                gallery: [
-                    'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600',
-                    'https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600'
-                ],
-                is_new_arrival: true,
-                colors: ['Matte Black Flacon'],
-                sizes: ['100ml Parfum']
-            },
-            {
-                id: 'p5', category_id: 'cat-clothing', name: 'Bespoke Executive Tuxedo Shirt', regular_price: 6800, sale_price: 5499,
-                primary_image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600',
-                gallery: [
-                    'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600',
-                    'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=600'
-                ],
-                is_bestseller: true,
-                colors: ['Pure White', 'Ivory Cream', 'Sky Blue'],
-                sizes: ['Small (38)', 'Medium (40)', 'Large (42)', 'XL (44)']
-            },
-            {
-                id: 'p6', category_id: 'cat-clothing', name: 'Italian Merino Wool Waistcoat', regular_price: 8900, sale_price: null,
-                primary_image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600',
-                gallery: [
-                    'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600',
-                    'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=600'
-                ],
-                is_new_arrival: true,
-                colors: ['Charcoal Grey', 'Navy Blue', 'Deep Burgundy'],
-                sizes: ['Medium (40)', 'Large (42)', 'XL (44)']
-            },
-            {
-                id: 'p7', category_id: 'cat-wallets', name: 'Full-Grain Italian Leather Wallet', regular_price: 4500, sale_price: null,
-                primary_image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=600',
-                gallery: [
-                    'https://images.unsplash.com/photo-1627123424574-724758594e93?w=600',
-                    'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600'
-                ],
-                is_bestseller: true,
-                colors: ['Classic Black', 'Cognac Tan', 'Dark Mahogany'],
-                sizes: ['Bifold Standard', 'Slim Bifold']
-            },
-            {
-                id: 'p8', category_id: 'cat-wallets', name: 'Minimalist Carbon Card Holder', regular_price: 3800, sale_price: 2999,
-                primary_image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600',
-                gallery: [
-                    'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600',
-                    'https://images.unsplash.com/photo-1627123424574-724758594e93?w=600'
-                ],
-                is_new_arrival: true,
-                colors: ['Carbon Fibre Black', 'Gunmetal Grey'],
-                sizes: ['6 Card RFID Capacity']
-            }
-        ];
-
-        const storeState = {
-            categories: JSON.parse(localStorage.getItem('luxera_categories') || JSON.stringify(defaultCategories)),
-            products: JSON.parse(localStorage.getItem('luxera_products') || JSON.stringify(defaultProducts)),
+        let storeState = {
+            categories: [],
+            products: [],
             cart: JSON.parse(localStorage.getItem('luxera_cart') || '[]'),
             currentCategory: 'all',
             searchQuery: ''
         };
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchStoreData();
             initEventListeners();
-            renderStorefront();
         });
+
+        async function fetchStoreData() {
+            // Fetch Settings
+            const { data: settings } = await supabaseClient.from('store_settings').select('*').single();
+            if (settings) {
+                if (settings.announcement) document.getElementById('announcement-bar').innerText = settings.announcement;
+                if (settings.hero_title) document.getElementById('hero-title').innerText = settings.hero_title;
+                if (settings.hero_subtitle) document.getElementById('hero-subtitle').innerText = settings.hero_subtitle;
+                if (settings.sale_tag) document.getElementById('hero-sale-tag').innerText = settings.sale_tag;
+            }
+
+            // Fetch Categories
+            const { data: cats } = await supabaseClient.from('categories').select('*');
+            storeState.categories = cats || [];
+
+            // Fetch Products
+            const { data: prods } = await supabaseClient.from('products').select('*');
+            storeState.products = prods || [];
+
+            renderStorefront();
+        }
 
         function renderStorefront() {
             renderNavigation();
@@ -463,7 +373,7 @@
             const method = document.getElementById('chk-payment-method').value;
             const noteBox = document.getElementById('payment-note-text');
             if (method.includes('Cash on Delivery')) {
-                noteBox.innerHTML = `• **COD**: Main qasam khata hoon ke main order lazmi receive karunga! ?? Pay cash upon delivery.`;
+                noteBox.innerHTML = `• **COD**: Main qasam khata hoon ke main order lazmi receive karunga! 🤝 Pay cash upon delivery.`;
             } else {
                 noteBox.innerHTML = `• **${method}**: WhatsApp par order confirmation ke baad manually payment transfer ki jaye gi (Account: 0300-5460203 - Title: Luxera Store).`;
             }
@@ -607,7 +517,7 @@
                 document.getElementById('receipt-modal').classList.remove('flex');
             });
 
-            document.getElementById('checkout-form').addEventListener('submit', (e) => {
+            document.getElementById('checkout-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const name = document.getElementById('chk-name').value;
                 const whatsapp = document.getElementById('chk-whatsapp').value;
@@ -616,7 +526,10 @@
                 const province = document.getElementById('chk-province').value;
                 const paymentMethod = document.getElementById('chk-payment-method').value;
 
-                const orderNum = 'LUX-' + Math.floor(1000 + Math.random() * 9000);
+                // Fetch total orders to generate sequential order number LUX-0001
+                const { count } = await supabaseClient.from('orders').select('*', { count: 'exact', head: true });
+                const orderNum = 'LUX-' + String((count || 0) + 1).padStart(4, '0');
+
                 const subtotal = storeState.cart.reduce((s, i) => s + (i.price * i.quantity), 0);
                 const delivery = subtotal >= 5000 ? 0 : 250;
                 const total = subtotal + delivery;
@@ -631,6 +544,9 @@
                     delivery_fee: delivery,
                     total_amount: total
                 };
+
+                // Save Order to Supabase
+                await supabaseClient.from('orders').insert([confirmedOrder]);
 
                 document.getElementById('checkout-modal').classList.add('hidden');
                 document.getElementById('checkout-modal').classList.remove('flex');

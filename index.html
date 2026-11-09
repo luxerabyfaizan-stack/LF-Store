@@ -38,6 +38,7 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #FAF8F5; }
         ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 3px; }
+        .nav-collapsible { transition: all 0.3s ease-in-out; }
     </style>
 </head>
 <body class="bg-ivory text-charcoal antialiased selection:bg-gold selection:text-white">
@@ -49,23 +50,32 @@
 
     <!-- Sticky Navigation Bar -->
     <header class="sticky top-0 z-40 bg-ivory/95 backdrop-blur-md border-b border-gold/20 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
-            <button id="mobile-menu-btn" class="lg:hidden text-charcoal hover:text-gold text-xl p-2 focus:outline-none">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3">
+            <!-- Mobile Menu Toggle Button -->
+            <button id="mobile-menu-btn" class="nav-collapsible lg:hidden text-charcoal hover:text-gold text-xl p-2 focus:outline-none shrink-0">
                 <i class="fa-solid fa-bars"></i>
             </button>
-            <a href="index.html" class="font-serif text-2xl md:text-3xl font-bold tracking-[0.25em] text-charcoal shrink-0">
+
+            <!-- Brand Logo -->
+            <a href="index.html" id="brand-logo" class="nav-collapsible font-serif text-2xl md:text-3xl font-bold tracking-[0.25em] text-charcoal shrink-0">
                 LUXERA
             </a>
-            <div class="relative flex-1 max-w-xs md:max-w-md mx-2">
-                <input type="text" id="navbar-search" placeholder="Search watches, perfumes, wallets..." class="w-full bg-white/80 border border-gold/30 rounded-full py-2 pl-10 pr-4 text-xs font-sans focus:outline-none focus:border-gold transition-all shadow-sm">
+
+            <!-- Search Bar in Navbar (Expands & Hides Logo on Focus) -->
+            <div class="relative flex-1 max-w-xs md:max-w-md mx-auto transition-all duration-300">
+                <input type="text" id="navbar-search" placeholder="Search watches, perfumes, wallets..." class="w-full bg-white/90 border border-gold/40 rounded-full py-2.5 pl-10 pr-8 text-xs font-sans focus:outline-none focus:border-gold transition-all shadow-sm">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gold text-xs"></i>
                 <button id="clear-search-btn" class="hidden absolute right-3 top-2.5 text-xs text-charcoal/50 hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button>
             </div>
+
+            <!-- Desktop Navigation Links -->
             <nav id="desktop-nav" class="hidden lg:flex items-center space-x-6 font-medium text-xs tracking-[0.2em] uppercase shrink-0">
                 <a href="index.html" class="hover:text-gold transition-colors">Home</a>
                 <div id="desktop-cat-links" class="flex items-center space-x-6"></div>
             </nav>
-            <div class="flex items-center space-x-4 text-lg shrink-0">
+
+            <!-- Action Icons -->
+            <div class="flex items-center space-x-3 text-lg shrink-0">
                 <button id="cart-btn" class="relative hover:text-gold transition-colors p-2 focus:outline-none">
                     <i class="fa-solid fa-bag-shopping text-xl"></i>
                     <span id="cart-counter" class="absolute -top-1 -right-1 bg-gold text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
@@ -221,7 +231,7 @@
         </div>
     </div>
 
-    <!-- Supabase Storefront Logic -->
+    <!-- Store Script -->
     <script>
         const SUPABASE_URL = 'https://phpwaqvoklllsfsdlcax.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_d-WohZctDC6XEoRXt9IAyg_Cb37pYMu';
@@ -241,7 +251,7 @@
         });
 
         async function fetchStoreData() {
-            // Fetch Settings
+            // Fetch Banners & Settings
             const { data: settings } = await supabaseClient.from('store_settings').select('*').single();
             if (settings) {
                 if (settings.announcement) document.getElementById('announcement-bar').innerText = settings.announcement;
@@ -479,6 +489,37 @@
 
             const searchInput = document.getElementById('navbar-search');
             const clearSearchBtn = document.getElementById('clear-search-btn');
+            const collapsibleElements = document.querySelectorAll('.nav-collapsible');
+
+            // Hide logo and menu button when search is clicked on mobile
+            searchInput.addEventListener('focus', () => {
+                if (window.innerWidth < 1024) {
+                    collapsibleElements.forEach(el => {
+                        el.style.opacity = '0';
+                        el.style.width = '0';
+                        el.style.overflow = 'hidden';
+                        el.style.margin = '0';
+                        el.style.padding = '0';
+                        el.style.visibility = 'hidden';
+                    });
+                }
+            });
+
+            // Restore logo and menu button when clicking outside
+            searchInput.addEventListener('blur', () => {
+                setTimeout(() => {
+                    if (!searchInput.value && document.activeElement !== clearSearchBtn) {
+                        collapsibleElements.forEach(el => {
+                            el.style.opacity = '1';
+                            el.style.width = 'auto';
+                            el.style.overflow = 'visible';
+                            el.style.margin = '';
+                            el.style.padding = '';
+                            el.style.visibility = 'visible';
+                        });
+                    }
+                }, 200);
+            });
 
             searchInput.addEventListener('input', (e) => {
                 storeState.searchQuery = e.target.value;
@@ -495,6 +536,7 @@
                 storeState.searchQuery = '';
                 clearSearchBtn.classList.add('hidden');
                 renderProducts();
+                searchInput.focus();
             });
 
             document.getElementById('checkout-btn').addEventListener('click', () => {
@@ -526,7 +568,7 @@
                 const province = document.getElementById('chk-province').value;
                 const paymentMethod = document.getElementById('chk-payment-method').value;
 
-                // Fetch total orders to generate sequential order number LUX-0001
+                // Fetch total order count to generate sequential order number LUX-0001
                 const { count } = await supabaseClient.from('orders').select('*', { count: 'exact', head: true });
                 const orderNum = 'LUX-' + String((count || 0) + 1).padStart(4, '0');
 
@@ -545,7 +587,7 @@
                     total_amount: total
                 };
 
-                // Save Order to Supabase
+                // Save Order to Supabase Cloud
                 await supabaseClient.from('orders').insert([confirmedOrder]);
 
                 document.getElementById('checkout-modal').classList.add('hidden');

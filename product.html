@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -92,16 +94,26 @@
 
     <!-- Product Page Script -->
     <script>
-        const storeState = {
-            categories: JSON.parse(localStorage.getItem('luxera_categories') || '[]'),
-            products: JSON.parse(localStorage.getItem('luxera_products') || '[]'),
+        const SUPABASE_URL = 'https://phpwaqvoklllsfsdlcax.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_d-WohZctDC6XEoRXt9IAyg_Cb37pYMu';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let storeState = {
+            categories: [],
+            products: [],
             cart: JSON.parse(localStorage.getItem('luxera_cart') || '[]')
         };
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('id');
-            
+
+            const { data: cats } = await supabaseClient.from('categories').select('*');
+            storeState.categories = cats || [];
+
+            const { data: prods } = await supabaseClient.from('products').select('*');
+            storeState.products = prods || [];
+
             initCartDrawerEvents();
             updateCartUI();
 
@@ -129,7 +141,6 @@
 
             document.getElementById('product-detail-container').innerHTML = `
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-                    <!-- Gallery Section -->
                     <div class="flex flex-col gap-4">
                         <div class="aspect-square bg-cream rounded-lg overflow-hidden shadow-md">
                             <img id="main-product-img" src="${gallery[0]}" class="w-full h-full object-cover transition-all duration-300">
@@ -142,8 +153,6 @@
                             `).join('')}
                         </div>
                     </div>
-
-                    <!-- Details Section -->
                     <div class="flex flex-col justify-between">
                         <div>
                             <span class="text-xs uppercase tracking-widest text-gold font-semibold mb-2 block">${getCategoryName(product.category_id)}</span>
@@ -152,9 +161,8 @@
                                 <span class="text-2xl md:text-3xl font-bold text-charcoal">Rs. ${Number(hasDiscount ? product.sale_price : product.regular_price).toLocaleString()}</span>
                                 ${hasDiscount ? `<span class="text-base text-charcoal/50 line-through">Rs. ${Number(product.regular_price).toLocaleString()}</span>` : ''}
                             </div>
-                            <p class="text-charcoal/80 text-sm leading-relaxed mb-8 font-light">Meticulously engineered luxury accessory crafted for uncompromising distinction and elegance. Designed with premium materials and signature finish.</p>
+                            <p class="text-charcoal/80 text-sm leading-relaxed mb-8 font-light">Meticulously engineered luxury accessory crafted for uncompromising distinction and elegance.</p>
 
-                            <!-- Color / Finish Selector -->
                             ${product.colors ? `
                                 <div class="mb-6">
                                     <label class="block text-xs uppercase tracking-wider font-semibold mb-2">Available Color / Finish *</label>
@@ -166,7 +174,6 @@
                                 </div>
                             ` : ''}
 
-                            <!-- Size / Dimension Selector -->
                             ${product.sizes ? `
                                 <div class="mb-8">
                                     <label class="block text-xs uppercase tracking-wider font-semibold mb-2">Select Size / Capacity *</label>
@@ -178,7 +185,6 @@
                                 </div>
                             ` : ''}
                         </div>
-
                         <button onclick="addToCart('${product.id}')" class="w-full bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs py-4 transition-all shadow-md">Add to Shopping Bag</button>
                     </div>
                 </div>
@@ -191,7 +197,7 @@
         function changeMainImage(imgUrl, btn) {
             document.getElementById('main-product-img').src = imgUrl;
             document.querySelectorAll('.thumb-btn').forEach(b => b.classList.remove('border-gold'));
-            b.classList.add('border-gold');
+            btn.classList.add('border-gold');
         }
 
         function selectVariantOption(className, btn) {

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details — LUXERA</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ivory: '#FAF8F5',
+                        cream: '#F4EFEA',
+                        gold: { DEFAULT: '#D4AF37', light: '#E5C158', dark: '#AA8C2C' },
+                        charcoal: '#1A1A1A',
+                    },
+                    fontFamily: {
+                        serif: ['Cinzel', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FAF8F5; color: #1A1A1A; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-serif { font-family: 'Cinzel', serif; }
+    </style>
+</head>
+<body class="bg-ivory text-charcoal antialiased selection:bg-gold selection:text-white">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-charcoal text-white text-[11px] py-2 px-4 text-center tracking-[0.2em] uppercase font-medium">
+        Complimentary Free Shipping on Orders Above Rs. 5,000 | WhatsApp: <span id="top-whatsapp">03005460203</span>
+    </div>
+
+    <!-- Sticky Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-ivory/95 backdrop-blur-md border-b border-gold/20 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <a href="index.html" class="font-serif text-2xl md:text-3xl font-bold tracking-[0.25em] text-charcoal shrink-0">
+                LUXERA
+            </a>
+            <div class="flex items-center space-x-4 text-lg shrink-0">
+                <a href="index.html" class="text-xs font-semibold uppercase tracking-widest hover:text-gold flex items-center gap-1.5"><i class="fa-solid fa-arrow-left"></i> Back to Shop</a>
+                <button id="cart-btn" class="relative hover:text-gold transition-colors p-2 focus:outline-none ml-4">
+                    <i class="fa-solid fa-bag-shopping text-xl"></i>
+                    <span id="cart-counter" class="absolute -top-1 -right-1 bg-gold text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Product Detail Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div id="product-detail-container" class="bg-white rounded-xl shadow-sm border border-gold/15 p-6 md:p-12 mb-16"></div>
+
+        <!-- Related Products Section -->
+        <div class="border-t border-gold/20 pt-12">
+            <h3 class="font-serif text-2xl font-bold tracking-wide mb-8 text-center uppercase">You May Also Appreciate</h3>
+            <div id="related-products-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+        </div>
+    </main>
+
+    <!-- Shopping Cart Slide-Over Drawer -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden transition-opacity">
+        <div class="absolute top-0 right-0 bottom-0 w-full max-w-md bg-ivory shadow-2xl flex flex-col justify-between transform translate-x-full transition-transform duration-300" id="cart-panel">
+            <div class="p-6 border-b border-gold/25 flex items-center justify-between">
+                <h3 class="font-serif text-lg font-bold tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-bag-shopping text-gold"></i> Your Shopping Bag
+                </h3>
+                <button id="close-cart-btn" class="text-xl hover:text-gold focus:outline-none"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+            <div class="p-6 border-t border-gold/25 bg-white shadow-inner">
+                <div class="space-y-2 text-xs uppercase tracking-wider mb-4">
+                    <div class="flex justify-between"><span>Subtotal:</span> <span id="cart-subtotal" class="font-semibold">Rs. 0.00</span></div>
+                    <div class="flex justify-between"><span>Delivery Fee (Free > Rs. 5,000):</span> <span id="cart-delivery" class="font-semibold text-gold">Rs. 250.00</span></div>
+                    <div class="flex justify-between text-sm font-bold pt-2 border-t border-gold/20 text-charcoal"><span>Total Amount:</span> <span id="cart-total" class="text-gold">Rs. 0.00</span></div>
+                </div>
+                <button onclick="window.location.href='index.html#shop'" class="w-full bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs py-4 transition-all shadow-md">Proceed to Checkout via Home</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Page Script -->
+    <script>
+        const storeState = {
+            categories: JSON.parse(localStorage.getItem('luxera_categories') || '[]'),
+            products: JSON.parse(localStorage.getItem('luxera_products') || '[]'),
+            cart: JSON.parse(localStorage.getItem('luxera_cart') || '[]')
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+            
+            initCartDrawerEvents();
+            updateCartUI();
+
+            if (!productId || !renderProductDetail(productId)) {
+                document.getElementById('product-detail-container').innerHTML = `
+                    <div class="text-center py-16">
+                        <h2 class="font-serif text-2xl font-bold mb-4">Product Not Found</h2>
+                        <a href="index.html" class="bg-gold text-charcoal px-6 py-3 font-semibold text-xs uppercase tracking-widest">Return to Home</a>
+                    </div>
+                `;
+            }
+        });
+
+        function getCategoryName(catId) {
+            const cat = storeState.categories.find(c => c.id === catId);
+            return cat ? cat.name : 'Accessory';
+        }
+
+        function renderProductDetail(productId) {
+            const product = storeState.products.find(p => p.id === productId);
+            if (!product) return false;
+
+            const hasDiscount = product.sale_price && product.sale_price < product.regular_price;
+            const gallery = product.gallery || [product.primary_image];
+
+            document.getElementById('product-detail-container').innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                    <!-- Gallery Section -->
+                    <div class="flex flex-col gap-4">
+                        <div class="aspect-square bg-cream rounded-lg overflow-hidden shadow-md">
+                            <img id="main-product-img" src="${gallery[0]}" class="w-full h-full object-cover transition-all duration-300">
+                        </div>
+                        <div class="flex gap-3 overflow-x-auto pb-2">
+                            ${gallery.map((img, idx) => `
+                                <button onclick="changeMainImage('${img}', this)" class="thumb-btn w-20 h-20 rounded border-2 ${idx === 0 ? 'border-gold' : 'border-gold/30'} overflow-hidden shrink-0 focus:outline-none">
+                                    <img src="${img}" class="w-full h-full object-cover">
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Details Section -->
+                    <div class="flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs uppercase tracking-widest text-gold font-semibold mb-2 block">${getCategoryName(product.category_id)}</span>
+                            <h1 class="font-serif text-3xl md:text-4xl font-bold text-charcoal mb-4">${product.name}</h1>
+                            <div class="flex items-baseline gap-4 mb-6">
+                                <span class="text-2xl md:text-3xl font-bold text-charcoal">Rs. ${Number(hasDiscount ? product.sale_price : product.regular_price).toLocaleString()}</span>
+                                ${hasDiscount ? `<span class="text-base text-charcoal/50 line-through">Rs. ${Number(product.regular_price).toLocaleString()}</span>` : ''}
+                            </div>
+                            <p class="text-charcoal/80 text-sm leading-relaxed mb-8 font-light">Meticulously engineered luxury accessory crafted for uncompromising distinction and elegance. Designed with premium materials and signature finish.</p>
+
+                            <!-- Color / Finish Selector -->
+                            ${product.colors ? `
+                                <div class="mb-6">
+                                    <label class="block text-xs uppercase tracking-wider font-semibold mb-2">Available Color / Finish *</label>
+                                    <div class="flex flex-wrap gap-3">
+                                        ${product.colors.map((c, i) => `
+                                            <button type="button" onclick="selectVariantOption('color-btn', this)" class="color-btn px-5 py-2.5 border border-gold/30 rounded text-xs uppercase tracking-wider ${i === 0 ? 'bg-charcoal text-white font-bold' : 'bg-white text-charcoal hover:border-gold'} transition-all">${c}</button>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            <!-- Size / Dimension Selector -->
+                            ${product.sizes ? `
+                                <div class="mb-8">
+                                    <label class="block text-xs uppercase tracking-wider font-semibold mb-2">Select Size / Capacity *</label>
+                                    <div class="flex flex-wrap gap-3">
+                                        ${product.sizes.map((s, i) => `
+                                            <button type="button" onclick="selectVariantOption('size-btn', this)" class="size-btn px-5 py-2.5 border border-gold/30 rounded text-xs uppercase tracking-wider ${i === 0 ? 'bg-charcoal text-white font-bold' : 'bg-white text-charcoal hover:border-gold'} transition-all">${s}</button>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <button onclick="addToCart('${product.id}')" class="w-full bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs py-4 transition-all shadow-md">Add to Shopping Bag</button>
+                    </div>
+                </div>
+            `;
+
+            renderRelatedProducts(product.category_id, product.id);
+            return true;
+        }
+
+        function changeMainImage(imgUrl, btn) {
+            document.getElementById('main-product-img').src = imgUrl;
+            document.querySelectorAll('.thumb-btn').forEach(b => b.classList.remove('border-gold'));
+            b.classList.add('border-gold');
+        }
+
+        function selectVariantOption(className, btn) {
+            document.querySelectorAll(`.${className}`).forEach(b => {
+                b.classList.remove('bg-charcoal', 'text-white', 'font-bold');
+                b.classList.add('bg-white', 'text-charcoal');
+            });
+            btn.classList.remove('bg-white', 'text-charcoal');
+            btn.classList.add('bg-charcoal', 'text-white', 'font-bold');
+        }
+
+        function addToCart(productId) {
+            const product = storeState.products.find(p => p.id === productId);
+            if (!product) return;
+
+            const selectedColor = document.querySelector('.color-btn.bg-charcoal')?.innerText || '';
+            const selectedSize = document.querySelector('.size-btn.bg-charcoal')?.innerText || '';
+            const variantLabel = [selectedColor, selectedSize].filter(Boolean).join(' / ') || 'Standard';
+
+            const price = product.sale_price || product.regular_price;
+            const cartItem = {
+                cart_id: `${productId}-${variantLabel}`,
+                product_id: productId,
+                name: product.name,
+                variant_name: variantLabel,
+                price: price,
+                image: product.primary_image,
+                quantity: 1
+            };
+
+            const existingIndex = storeState.cart.findIndex(i => i.cart_id === cartItem.cart_id);
+            if (existingIndex > -1) {
+                storeState.cart[existingIndex].quantity += 1;
+            } else {
+                storeState.cart.push(cartItem);
+            }
+
+            saveCart();
+            openCartDrawer();
+        }
+
+        function renderRelatedProducts(catId, currentId) {
+            const related = storeState.products.filter(p => p.category_id === catId && p.id !== currentId).slice(0, 4);
+            const grid = document.getElementById('related-products-grid');
+            
+            if (related.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center text-xs text-charcoal/60 uppercase">No related items found.</div>`;
+                return;
+            }
+
+            grid.innerHTML = related.map(p => `
+                <div onclick="window.location.href='product.html?id=${p.id}'" class="cursor-pointer bg-white p-4 rounded-lg border border-gold/15 hover:shadow-lg transition-all flex flex-col justify-between">
+                    <div>
+                        <img src="${p.primary_image}" class="w-full aspect-square object-cover rounded mb-3">
+                        <h4 class="font-serif text-xs font-bold line-clamp-1">${p.name}</h4>
+                    </div>
+                    <span class="text-xs font-bold text-gold mt-2 block">Rs. ${Number(p.sale_price || p.regular_price).toLocaleString()}</span>
+                </div>
+            `).join('');
+        }
+
+        function initCartDrawerEvents() {
+            document.getElementById('cart-btn').addEventListener('click', openCartDrawer);
+            document.getElementById('close-cart-btn').addEventListener('click', closeCartDrawer);
+        }
+
+        function openCartDrawer() {
+            document.getElementById('cart-drawer').classList.remove('hidden');
+            document.getElementById('cart-drawer').classList.add('flex');
+            setTimeout(() => document.getElementById('cart-panel').classList.remove('translate-x-full'), 10);
+        }
+
+        function closeCartDrawer() {
+            document.getElementById('cart-panel').classList.add('translate-x-full');
+            setTimeout(() => {
+                document.getElementById('cart-drawer').classList.add('hidden');
+                document.getElementById('cart-drawer').classList.remove('flex');
+            }, 300);
+        }
+
+        function saveCart() {
+            localStorage.setItem('luxera_cart', JSON.stringify(storeState.cart));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const counter = document.getElementById('cart-counter');
+            const totalItems = storeState.cart.reduce((sum, item) => sum + item.quantity, 0);
+            counter.innerText = totalItems;
+
+            const container = document.getElementById('cart-items-container');
+            if (storeState.cart.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-charcoal/60 text-xs uppercase tracking-widest">Your shopping bag is empty.</div>`;
+                document.getElementById('cart-subtotal').innerText = 'Rs. 0.00';
+                document.getElementById('cart-delivery').innerText = 'Rs. 250.00';
+                document.getElementById('cart-total').innerText = 'Rs. 250.00';
+                return;
+            }
+
+            let subtotal = 0;
+            container.innerHTML = storeState.cart.map(item => {
+                const lineTotal = item.price * item.quantity;
+                subtotal += lineTotal;
+                return `
+                    <div class="flex gap-4 items-center bg-white p-3 rounded border border-gold/15">
+                        <img src="${item.image}" class="w-16 h-16 object-cover rounded">
+                        <div class="flex-1">
+                            <h4 class="font-serif text-xs font-bold text-charcoal">${item.name}</h4>
+                            <span class="text-[10px] text-gold font-semibold uppercase">${item.variant_name}</span>
+                            <div class="text-xs font-bold mt-1">Rs. ${item.price.toLocaleString()}</div>
+                            <div class="flex items-center gap-2 mt-2">
+                                <button onclick="updateQty('${item.cart_id}', -1)" class="w-6 h-6 bg-cream border rounded text-xs font-bold">-</button>
+                                <span class="text-xs font-semibold">${item.quantity}</span>
+                                <button onclick="updateQty('${item.cart_id}', 1)" class="w-6 h-6 bg-cream border rounded text-xs font-bold">+</button>
+                            </div>
+                        </div>
+                        <button onclick="removeFromCart('${item.cart_id}')" class="text-charcoal/50 hover:text-red-600 text-sm"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            }).join('');
+
+            const deliveryFee = subtotal >= 5000 || subtotal === 0 ? 0 : 250;
+            const finalTotal = subtotal + (subtotal === 0 ? 0 : deliveryFee);
+
+            document.getElementById('cart-subtotal').innerText = `Rs. ${subtotal.toLocaleString()}`;
+            document.getElementById('cart-delivery').innerText = deliveryFee === 0 ? 'FREE' : `Rs. ${deliveryFee.toLocaleString()}`;
+            document.getElementById('cart-total').innerText = `Rs. ${finalTotal.toLocaleString()}`;
+        }
+
+        function updateQty(cartId, delta) {
+            const item = storeState.cart.find(i => i.cart_id === cartId);
+            if (!item) return;
+            const newQty = item.quantity + delta;
+            if (newQty <= 0) {
+                removeFromCart(cartId);
+            } else {
+                item.quantity = newQty;
+                saveCart();
+            }
+        }
+
+        function removeFromCart(cartId) {
+            storeState.cart = storeState.cart.filter(i => i.cart_id !== cartId);
+            saveCart();
+        }
+    </script>
+</body>
+</html>

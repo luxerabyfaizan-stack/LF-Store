@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUXERA — Luxury Men's Accessories</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ivory: '#FAF8F5',
+                        cream: '#F4EFEA',
+                        gold: { DEFAULT: '#D4AF37', light: '#E5C158', dark: '#AA8C2C' },
+                        charcoal: '#1A1A1A',
+                    },
+                    fontFamily: {
+                        serif: ['Cinzel', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FAF8F5; color: #1A1A1A; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-serif { font-family: 'Cinzel', serif; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #FAF8F5; }
+        ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-ivory text-charcoal antialiased selection:bg-gold selection:text-white">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-charcoal text-white text-[11px] py-2 px-4 text-center tracking-[0.2em] uppercase font-medium">
+        Complimentary Free Shipping on Orders Above Rs. 5,000 | WhatsApp: <span id="top-whatsapp">03005460203</span>
+    </div>
+
+    <!-- Sticky Navigation Bar (Clean, Admin Icon Removed) -->
+    <header class="sticky top-0 z-40 bg-ivory/95 backdrop-blur-md border-b border-gold/20 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <!-- Mobile Menu Toggle Button -->
+            <button id="mobile-menu-btn" class="lg:hidden text-charcoal hover:text-gold text-xl p-2 focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <!-- Brand Logo -->
+            <a href="index.html" class="font-serif text-2xl md:text-3xl font-bold tracking-[0.25em] text-charcoal shrink-0">
+                LUXERA
+            </a>
+
+            <!-- Search Bar in Navbar -->
+            <div class="relative flex-1 max-w-xs md:max-w-md mx-2">
+                <input type="text" id="navbar-search" placeholder="Search watches, perfumes, wallets..." class="w-full bg-white/80 border border-gold/30 rounded-full py-2 pl-10 pr-4 text-xs font-sans focus:outline-none focus:border-gold transition-all shadow-sm">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gold text-xs"></i>
+                <button id="clear-search-btn" class="hidden absolute right-3 top-2.5 text-xs text-charcoal/50 hover:text-charcoal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Desktop Navigation Links -->
+            <nav id="desktop-nav" class="hidden lg:flex items-center space-x-6 font-medium text-xs tracking-[0.2em] uppercase shrink-0">
+                <a href="index.html" class="hover:text-gold transition-colors">Home</a>
+                <div id="desktop-cat-links" class="flex items-center space-x-6"></div>
+            </nav>
+
+            <!-- Action Icons -->
+            <div class="flex items-center space-x-4 text-lg shrink-0">
+                <button id="cart-btn" class="relative hover:text-gold transition-colors p-2 focus:outline-none">
+                    <i class="fa-solid fa-bag-shopping text-xl"></i>
+                    <span id="cart-counter" class="absolute -top-1 -right-1 bg-gold text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Slide-Out Drawer -->
+    <div id="mobile-drawer" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden transition-opacity">
+        <div class="absolute top-0 left-0 bottom-0 w-80 bg-ivory shadow-2xl p-6 flex flex-col justify-between transform -translate-x-full transition-transform duration-300" id="drawer-panel">
+            <div>
+                <div class="flex items-center justify-between pb-6 border-b border-gold/20">
+                    <span class="font-serif text-2xl font-bold tracking-widest text-charcoal">LUXERA</span>
+                    <button id="close-drawer-btn" class="text-xl hover:text-gold focus:outline-none"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <nav id="mobile-cat-links" class="mt-6 flex flex-col space-y-4 font-medium text-xs uppercase tracking-widest"></nav>
+            </div>
+            <div class="border-t border-gold/20 pt-4 text-xs text-charcoal/70">
+                <p class="font-semibold mb-1">WhatsApp Concierge</p>
+                <a href="https://wa.me/923005460203" target="_blank" class="text-gold font-semibold flex items-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-base"></i> +92 300 5460203
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative bg-charcoal text-white py-28 md:py-36 bg-cover bg-center" style="background-image: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1920&auto=format&fit=crop');">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span class="text-gold uppercase tracking-[0.3em] text-xs font-semibold mb-4 block">Crafted For Distinction</span>
+            <h1 class="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-wider mb-6">TIMELINE OF ELEGANCE</h1>
+            <p class="text-gray-300 max-w-2xl mx-auto text-sm md:text-base mb-10 font-light leading-relaxed">Discover curated luxury men's accessories designed for the modern gentleman.</p>
+            <a href="#shop" class="inline-block bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs px-8 py-4 transition-all shadow-lg hover:shadow-xl">Explore Collection</a>
+        </div>
+    </section>
+
+    <!-- Main Shop / Catalog Section -->
+    <main id="shop" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="text-center mb-12">
+            <span class="text-gold uppercase tracking-[0.2em] text-xs font-semibold block mb-2">Curated Selection</span>
+            <h2 class="font-serif text-2xl md:text-4xl font-bold tracking-wide">THE LUXURY CATALOGUE</h2>
+            <div class="w-16 h-[2px] bg-gold mx-auto mt-4"></div>
+        </div>
+
+        <!-- Flexible Category Slider -->
+        <div class="w-full overflow-x-auto pb-4 mb-12">
+            <div id="category-filter-tabs" class="flex items-center justify-start md:justify-center gap-3 min-w-max px-2"></div>
+        </div>
+
+        <!-- Search Results Count Banner -->
+        <div id="search-status" class="hidden mb-6 text-center text-xs uppercase tracking-widest text-charcoal/70"></div>
+
+        <!-- Product Grid -->
+        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8"></div>
+    </main>
+
+    <!-- Footer (Instagram Link Added, Admin Portal Removed) -->
+    <footer class="bg-charcoal text-white pt-16 pb-12 border-t border-gold/25 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+            <div>
+                <a href="index.html" class="font-serif text-2xl font-bold tracking-widest text-white flex items-center gap-2 mb-4">LUXERA</a>
+                <p class="text-gray-400 text-xs leading-relaxed font-light mb-4">International luxury men's accessories brand redefining elegance through meticulous craftsmanship.</p>
+            </div>
+            <div>
+                <h4 class="font-serif text-sm font-semibold tracking-widest uppercase mb-4 text-gold">Quick Links</h4>
+                <ul id="footer-cats" class="space-y-2 text-xs text-gray-300 uppercase tracking-wider"></ul>
+            </div>
+            <div>
+                <h4 class="font-serif text-sm font-semibold tracking-widest uppercase mb-4 text-gold">Social Community</h4>
+                <ul class="space-y-2 text-xs text-gray-300 uppercase tracking-wider">
+                    <li><a href="https://instagram.com/luxerabyfaizan" target="_blank" class="hover:text-gold transition-colors flex items-center gap-2"><i class="fa-brands fa-instagram text-sm"></i> @luxerabyfaizan</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-serif text-sm font-semibold tracking-widest uppercase mb-4 text-gold">Concierge</h4>
+                <a href="https://wa.me/923005460203" target="_blank" class="text-gold font-semibold text-sm flex items-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-base"></i> 0300 5460203
+                </a>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 border-t border-white/10 text-center text-xs text-gray-500 font-light">
+            &copy; 2026 LUXERA Men's Accessories. All Rights Reserved.
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Slide-Over Drawer -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden transition-opacity">
+        <div class="absolute top-0 right-0 bottom-0 w-full max-w-md bg-ivory shadow-2xl flex flex-col justify-between transform translate-x-full transition-transform duration-300" id="cart-panel">
+            <div class="p-6 border-b border-gold/25 flex items-center justify-between">
+                <h3 class="font-serif text-lg font-bold tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-bag-shopping text-gold"></i> Your Shopping Bag
+                </h3>
+                <button id="close-cart-btn" class="text-xl hover:text-gold focus:outline-none"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+            <div class="p-6 border-t border-gold/25 bg-white shadow-inner">
+                <div class="space-y-2 text-xs uppercase tracking-wider mb-4">
+                    <div class="flex justify-between"><span>Subtotal:</span> <span id="cart-subtotal" class="font-semibold">Rs. 0.00</span></div>
+                    <div class="flex justify-between"><span>Delivery Fee (Free > Rs. 5,000):</span> <span id="cart-delivery" class="font-semibold text-gold">Rs. 250.00</span></div>
+                    <div class="flex justify-between text-sm font-bold pt-2 border-t border-gold/20 text-charcoal"><span>Total Amount:</span> <span id="cart-total" class="text-gold">Rs. 0.00</span></div>
+                </div>
+                <button id="checkout-btn" class="w-full bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs py-4 transition-all shadow-md">Proceed to Secure Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal with Funny COD & Manual Advance Payment Instructions -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-ivory max-w-2xl w-full rounded-lg shadow-2xl overflow-hidden relative max-h-[95vh] flex flex-col">
+            <div class="p-6 bg-charcoal text-white flex items-center justify-between">
+                <h3 class="font-serif text-lg font-bold tracking-widest">SECURE CHECKOUT</h3>
+                <button id="close-checkout-btn" class="text-xl text-gray-400 hover:text-white focus:outline-none"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="checkout-form" class="p-6 overflow-y-auto space-y-4 text-xs uppercase tracking-wider">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label class="block font-semibold mb-1">Full Name *</label><input type="text" id="chk-name" required class="w-full bg-white border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold"></div>
+                    <div><label class="block font-semibold mb-1">WhatsApp Number *</label><input type="text" id="chk-whatsapp" required placeholder="03005460203" class="w-full bg-white border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold"></div>
+                </div>
+                <div><label class="block font-semibold mb-1">Complete Delivery Address *</label><textarea id="chk-address" required rows="2" class="w-full bg-white border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold"></textarea></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label class="block font-semibold mb-1">City *</label><input type="text" id="chk-city" required class="w-full bg-white border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold"></div>
+                    <div><label class="block font-semibold mb-1">Province / State *</label><input type="text" id="chk-province" required class="w-full bg-white border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold"></div>
+                </div>
+
+                <!-- Payment Method Selection -->
+                <div>
+                    <label class="block font-semibold mb-2">Select Payment Method *</label>
+                    <select id="chk-payment-method" onchange="updatePaymentNote()" class="w-full bg-white border border-gold/30 p-3 text-xs uppercase tracking-wider font-sans focus:outline-none focus:border-gold">
+                        <option value="Cash on Delivery (COD)">Cash on Delivery (COD)</option>
+                        <option value="JazzCash (Manual Advance / Transfer)">JazzCash (Manual Transfer)</option>
+                        <option value="Easypaisa (Manual Advance / Transfer)">Easypaisa (Manual Transfer)</option>
+                        <option value="Bank Transfer (Meezan / HBL)">Direct Bank Transfer</option>
+                    </select>
+                </div>
+
+                <!-- Dynamic Payment Instructions Box -->
+                <div id="payment-instruction-box" class="bg-cream p-4 border border-gold/30 rounded normal-case text-[11px] space-y-1 text-charcoal/80">
+                    <p class="font-semibold uppercase text-gold mb-1">Payment Instructions:</p>
+                    <p id="payment-note-text">• **COD**: Main qasam khata hoon ke main order lazmi receive karunga! ?? Pay cash upon delivery.</p>
+                </div>
+
+                <button type="submit" class="w-full bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs py-4 transition-all shadow-md">Complete Order & Generate Receipt</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Receipt Modal -->
+    <div id="receipt-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-ivory max-w-xl w-full rounded-lg shadow-2xl overflow-hidden relative max-h-[95vh] flex flex-col">
+            <div class="p-6 bg-charcoal text-white flex items-center justify-between">
+                <h3 class="font-serif text-lg font-bold tracking-widest">ORDER PLACED SUCCESSFULLY</h3>
+                <button id="close-receipt-btn" class="text-xl text-gray-400 hover:text-white focus:outline-none"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="receipt-content" class="p-8 overflow-y-auto space-y-6 text-xs uppercase tracking-wider"></div>
+            <div class="p-6 bg-white border-t border-gold/20 flex gap-3">
+                <button id="whatsapp-share-btn" class="flex-1 bg-[#25D366] hover:bg-[#20ba5a] text-white font-semibold uppercase tracking-widest text-xs py-3.5 rounded transition-all flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-base"></i> Send Order & Payment to WhatsApp
+                </button>
+                <button id="print-receipt-btn" class="bg-charcoal hover:bg-black text-white font-semibold px-5 py-3.5 rounded transition-all text-xs uppercase tracking-widest"><i class="fa-solid fa-print"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        const defaultCategories = [
+            { id: 'cat-watches', name: 'Watches' },
+            { id: 'cat-perfumes', name: 'Perfumes' },
+            { id: 'cat-clothing', name: 'Clothing' },
+            { id: 'cat-wallets', name: 'Wallets' }
+        ];
+
+        const defaultProducts = [
+            {
+                id: 'p1', category_id: 'cat-watches', name: 'Royal Chronograph Gold', regular_price: 18500, sale_price: 14999,
+                primary_image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600',
+                gallery: [
+                    'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600',
+                    'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600',
+                    'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600'
+                ],
+                is_bestseller: true,
+                colors: ['Yellow Gold', 'Rose Gold', 'Silver Steel'],
+                sizes: ['40mm Case', '42mm Case']
+            },
+            {
+                id: 'p2', category_id: 'cat-watches', name: 'Executive Silver Tourbillon', regular_price: 21000, sale_price: 17999,
+                primary_image: 'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=600',
+                gallery: [
+                    'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=600',
+                    'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600'
+                ],
+                is_new_arrival: true,
+                colors: ['Stainless Silver', 'Midnight Black'],
+                sizes: ['42mm Case']
+            },
+            {
+                id: 'p3', category_id: 'cat-perfumes', name: 'Oud Al Sultan Eau de Parfum', regular_price: 9500, sale_price: null,
+                primary_image: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600',
+                gallery: [
+                    'https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600',
+                    'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600'
+                ],
+                is_bestseller: true,
+                colors: ['Amber Bottle'],
+                sizes: ['50ml Spray', '100ml Spray']
+            },
+            {
+                id: 'p4', category_id: 'cat-perfumes', name: 'Royal Noir Extrait de Parfum', regular_price: 12000, sale_price: 9999,
+                primary_image: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600',
+                gallery: [
+                    'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600',
+                    'https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600'
+                ],
+                is_new_arrival: true,
+                colors: ['Matte Black Flacon'],
+                sizes: ['100ml Parfum']
+            },
+            {
+                id: 'p5', category_id: 'cat-clothing', name: 'Bespoke Executive Tuxedo Shirt', regular_price: 6800, sale_price: 5499,
+                primary_image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600',
+                gallery: [
+                    'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600',
+                    'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=600'
+                ],
+                is_bestseller: true,
+                colors: ['Pure White', 'Ivory Cream', 'Sky Blue'],
+                sizes: ['Small (38)', 'Medium (40)', 'Large (42)', 'XL (44)']
+            },
+            {
+                id: 'p6', category_id: 'cat-clothing', name: 'Italian Merino Wool Waistcoat', regular_price: 8900, sale_price: null,
+                primary_image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600',
+                gallery: [
+                    'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600',
+                    'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=600'
+                ],
+                is_new_arrival: true,
+                colors: ['Charcoal Grey', 'Navy Blue', 'Deep Burgundy'],
+                sizes: ['Medium (40)', 'Large (42)', 'XL (44)']
+            },
+            {
+                id: 'p7', category_id: 'cat-wallets', name: 'Full-Grain Italian Leather Wallet', regular_price: 4500, sale_price: null,
+                primary_image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=600',
+                gallery: [
+                    'https://images.unsplash.com/photo-1627123424574-724758594e93?w=600',
+                    'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600'
+                ],
+                is_bestseller: true,
+                colors: ['Classic Black', 'Cognac Tan', 'Dark Mahogany'],
+                sizes: ['Bifold Standard', 'Slim Bifold']
+            },
+            {
+                id: 'p8', category_id: 'cat-wallets', name: 'Minimalist Carbon Card Holder', regular_price: 3800, sale_price: 2999,
+                primary_image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600',
+                gallery: [
+                    'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600',
+                    'https://images.unsplash.com/photo-1627123424574-724758594e93?w=600'
+                ],
+                is_new_arrival: true,
+                colors: ['Carbon Fibre Black', 'Gunmetal Grey'],
+                sizes: ['6 Card RFID Capacity']
+            }
+        ];
+
+        const storeState = {
+            categories: JSON.parse(localStorage.getItem('luxera_categories') || JSON.stringify(defaultCategories)),
+            products: JSON.parse(localStorage.getItem('luxera_products') || JSON.stringify(defaultProducts)),
+            cart: JSON.parse(localStorage.getItem('luxera_cart') || '[]'),
+            currentCategory: 'all',
+            searchQuery: ''
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initEventListeners();
+            renderStorefront();
+        });
+
+        function renderStorefront() {
+            renderNavigation();
+            renderCategoryTabs();
+            renderProducts();
+            updateCartUI();
+        }
+
+        function renderNavigation() {
+            const desktopNav = document.getElementById('desktop-cat-links');
+            const mobileNav = document.getElementById('mobile-cat-links');
+            const footerCats = document.getElementById('footer-cats');
+
+            desktopNav.innerHTML = '';
+            mobileNav.innerHTML = '<a href="index.html" class="hover:text-gold transition-colors py-1 block">Home</a>';
+            footerCats.innerHTML = '';
+
+            storeState.categories.forEach(cat => {
+                desktopNav.innerHTML += `<button onclick="filterCategory('${cat.id}')" class="hover:text-gold transition-colors text-left uppercase">${cat.name}</button>`;
+                mobileNav.innerHTML += `<button onclick="filterCategory('${cat.id}'); toggleMobileMenu();" class="hover:text-gold transition-colors text-left uppercase py-1 block w-full">${cat.name}</button>`;
+                footerCats.innerHTML += `<li><a href="index.html" onclick="filterCategory('${cat.id}')" class="hover:text-gold transition-colors">${cat.name}</a></li>`;
+            });
+        }
+
+        function renderCategoryTabs() {
+            const tabsContainer = document.getElementById('category-filter-tabs');
+            let html = `<button onclick="filterCategory('all')" class="cat-tab-btn px-6 py-2.5 rounded-full text-xs uppercase tracking-wider font-semibold ${storeState.currentCategory === 'all' ? 'bg-charcoal text-white' : 'bg-white border border-gold/30 hover:border-gold'} transition-all shadow-sm shrink-0">All Items</button>`;
+            
+            storeState.categories.forEach(cat => {
+                const isActive = storeState.currentCategory === cat.id;
+                html += `<button onclick="filterCategory('${cat.id}')" class="cat-tab-btn px-6 py-2.5 rounded-full text-xs uppercase tracking-wider font-semibold ${isActive ? 'bg-charcoal text-white' : 'bg-white border border-gold/30 hover:border-gold'} transition-all shadow-sm shrink-0">${cat.name}</button>`;
+            });
+            tabsContainer.innerHTML = html;
+        }
+
+        function filterCategory(catId) {
+            storeState.currentCategory = catId;
+            storeState.searchQuery = '';
+            document.getElementById('navbar-search').value = '';
+            document.getElementById('clear-search-btn').classList.add('hidden');
+            document.getElementById('search-status').classList.add('hidden');
+            renderCategoryTabs();
+            renderProducts();
+            
+            const shopSection = document.getElementById('shop');
+            if (shopSection) shopSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('product-grid');
+            let filtered = storeState.products;
+
+            if (storeState.currentCategory !== 'all') {
+                filtered = filtered.filter(p => p.category_id === storeState.currentCategory);
+            }
+
+            if (storeState.searchQuery.trim() !== '') {
+                const q = storeState.searchQuery.toLowerCase();
+                filtered = filtered.filter(p => 
+                    p.name.toLowerCase().includes(q) || 
+                    getCategoryName(p.category_id).toLowerCase().includes(q)
+                );
+                const status = document.getElementById('search-status');
+                status.innerText = `Showing ${filtered.length} results matching "${storeState.searchQuery}"`;
+                status.classList.remove('hidden');
+            } else {
+                document.getElementById('search-status').classList.add('hidden');
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-16 text-charcoal/60 text-sm uppercase tracking-widest">No luxury products found matching your search.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(p => {
+                const hasDiscount = p.sale_price && p.sale_price < p.regular_price;
+                const discountPct = hasDiscount ? Math.round(((p.regular_price - p.sale_price) / p.regular_price) * 100) : 0;
+                const badge = p.is_bestseller ? 'Bestseller' : (p.is_new_arrival ? 'New Arrival' : '');
+
+                return `
+                    <div onclick="window.location.href='product.html?id=${p.id}'" class="cursor-pointer bg-white rounded-lg shadow-sm hover:shadow-xl transition-all duration-300 border border-gold/15 overflow-hidden flex flex-col justify-between group">
+                        <div class="relative overflow-hidden aspect-[4/5] bg-cream">
+                            ${badge ? `<span class="absolute top-2 left-2 z-10 bg-charcoal text-gold text-[10px] font-semibold uppercase tracking-widest px-2.5 py-1">${badge}</span>` : ''}
+                            ${hasDiscount ? `<span class="absolute top-2 right-2 z-10 bg-gold text-charcoal text-[10px] font-bold uppercase tracking-widest px-2 py-1">-${discountPct}%</span>` : ''}
+                            <img src="${p.primary_image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <div class="p-4 flex flex-col flex-1 justify-between">
+                            <div>
+                                <span class="text-[10px] uppercase tracking-widest text-gold font-semibold block mb-1">${getCategoryName(p.category_id)}</span>
+                                <h3 class="font-serif text-sm font-bold text-charcoal line-clamp-1 mb-2">${p.name}</h3>
+                            </div>
+                            <div class="flex items-baseline justify-between mt-2 pt-2 border-t border-gold/10">
+                                <div>
+                                    <span class="text-sm font-bold text-charcoal">Rs. ${Number(hasDiscount ? p.sale_price : p.regular_price).toLocaleString()}</span>
+                                    ${hasDiscount ? `<span class="text-xs text-charcoal/50 line-through ml-1.5">Rs. ${Number(p.regular_price).toLocaleString()}</span>` : ''}
+                                </div>
+                                <span class="text-gold text-xs font-semibold uppercase tracking-wider">View <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getCategoryName(catId) {
+            const cat = storeState.categories.find(c => c.id === catId);
+            return cat ? cat.name : 'Accessory';
+        }
+
+        function updatePaymentNote() {
+            const method = document.getElementById('chk-payment-method').value;
+            const noteBox = document.getElementById('payment-note-text');
+            if (method.includes('Cash on Delivery')) {
+                noteBox.innerHTML = `• **COD**: Main qasam khata hoon ke main order lazmi receive karunga! ?? Pay cash upon delivery.`;
+            } else {
+                noteBox.innerHTML = `• **${method}**: WhatsApp par order confirmation ke baad manually payment transfer ki jaye gi (Account: 0300-5460203 - Title: Luxera Store).`;
+            }
+        }
+
+        function updateCartUI() {
+            const counter = document.getElementById('cart-counter');
+            const totalItems = storeState.cart.reduce((sum, item) => sum + item.quantity, 0);
+            counter.innerText = totalItems;
+
+            const container = document.getElementById('cart-items-container');
+            if (storeState.cart.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-charcoal/60 text-xs uppercase tracking-widest">Your shopping bag is empty.</div>`;
+                document.getElementById('cart-subtotal').innerText = 'Rs. 0.00';
+                document.getElementById('cart-delivery').innerText = 'Rs. 250.00';
+                document.getElementById('cart-total').innerText = 'Rs. 250.00';
+                return;
+            }
+
+            let subtotal = 0;
+            container.innerHTML = storeState.cart.map(item => {
+                const lineTotal = item.price * item.quantity;
+                subtotal += lineTotal;
+                return `
+                    <div class="flex gap-4 items-center bg-white p-3 rounded border border-gold/15">
+                        <img src="${item.image}" class="w-16 h-16 object-cover rounded">
+                        <div class="flex-1">
+                            <h4 class="font-serif text-xs font-bold text-charcoal">${item.name}</h4>
+                            <span class="text-[10px] text-gold font-semibold uppercase">${item.variant_name}</span>
+                            <div class="text-xs font-bold mt-1">Rs. ${item.price.toLocaleString()}</div>
+                            <div class="flex items-center gap-2 mt-2">
+                                <button onclick="updateQty('${item.cart_id}', -1)" class="w-6 h-6 bg-cream border rounded text-xs font-bold">-</button>
+                                <span class="text-xs font-semibold">${item.quantity}</span>
+                                <button onclick="updateQty('${item.cart_id}', 1)" class="w-6 h-6 bg-cream border rounded text-xs font-bold">+</button>
+                            </div>
+                        </div>
+                        <button onclick="removeFromCart('${item.cart_id}')" class="text-charcoal/50 hover:text-red-600 text-sm"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            }).join('');
+
+            const deliveryFee = subtotal >= 5000 || subtotal === 0 ? 0 : 250;
+            const finalTotal = subtotal + (subtotal === 0 ? 0 : deliveryFee);
+
+            document.getElementById('cart-subtotal').innerText = `Rs. ${subtotal.toLocaleString()}`;
+            document.getElementById('cart-delivery').innerText = deliveryFee === 0 ? 'FREE' : `Rs. ${deliveryFee.toLocaleString()}`;
+            document.getElementById('cart-total').innerText = `Rs. ${finalTotal.toLocaleString()}`;
+        }
+
+        function updateQty(cartId, delta) {
+            const item = storeState.cart.find(i => i.cart_id === cartId);
+            if (!item) return;
+            const newQty = item.quantity + delta;
+            if (newQty <= 0) {
+                removeFromCart(cartId);
+            } else {
+                item.quantity = newQty;
+                saveCart();
+            }
+        }
+
+        function removeFromCart(cartId) {
+            storeState.cart = storeState.cart.filter(i => i.cart_id !== cartId);
+            saveCart();
+        }
+
+        function saveCart() {
+            localStorage.setItem('luxera_cart', JSON.stringify(storeState.cart));
+            updateCartUI();
+        }
+
+        function openCartDrawer() {
+            document.getElementById('cart-drawer').classList.remove('hidden');
+            document.getElementById('cart-drawer').classList.add('flex');
+            setTimeout(() => document.getElementById('cart-panel').classList.remove('translate-x-full'), 10);
+        }
+
+        function closeCartDrawer() {
+            document.getElementById('cart-panel').classList.add('translate-x-full');
+            setTimeout(() => {
+                document.getElementById('cart-drawer').classList.add('hidden');
+                document.getElementById('cart-drawer').classList.remove('flex');
+            }, 300);
+        }
+
+        function toggleMobileMenu() {
+            const drawer = document.getElementById('mobile-drawer');
+            const panel = document.getElementById('drawer-panel');
+            if (drawer.classList.contains('hidden')) {
+                drawer.classList.remove('hidden');
+                setTimeout(() => panel.classList.remove('-translate-x-full'), 10);
+            } else {
+                panel.classList.add('-translate-x-full');
+                setTimeout(() => drawer.classList.add('hidden'), 300);
+            }
+        }
+
+        function initEventListeners() {
+            document.getElementById('cart-btn').addEventListener('click', openCartDrawer);
+            document.getElementById('close-cart-btn').addEventListener('click', closeCartDrawer);
+            document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
+            document.getElementById('close-drawer-btn').addEventListener('click', toggleMobileMenu);
+
+            const searchInput = document.getElementById('navbar-search');
+            const clearSearchBtn = document.getElementById('clear-search-btn');
+
+            searchInput.addEventListener('input', (e) => {
+                storeState.searchQuery = e.target.value;
+                if (e.target.value.length > 0) {
+                    clearSearchBtn.classList.remove('hidden');
+                } else {
+                    clearSearchBtn.classList.add('hidden');
+                }
+                renderProducts();
+            });
+
+            clearSearchBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                storeState.searchQuery = '';
+                clearSearchBtn.classList.add('hidden');
+                renderProducts();
+            });
+
+            document.getElementById('checkout-btn').addEventListener('click', () => {
+                if (storeState.cart.length === 0) {
+                    alert('Your shopping bag is empty.');
+                    return;
+                }
+                closeCartDrawer();
+                document.getElementById('checkout-modal').classList.remove('hidden');
+                document.getElementById('checkout-modal').classList.add('flex');
+            });
+
+            document.getElementById('close-checkout-btn').addEventListener('click', () => {
+                document.getElementById('checkout-modal').classList.add('hidden');
+                document.getElementById('checkout-modal').classList.remove('flex');
+            });
+
+            document.getElementById('close-receipt-btn').addEventListener('click', () => {
+                document.getElementById('receipt-modal').classList.add('hidden');
+                document.getElementById('receipt-modal').classList.remove('flex');
+            });
+
+            document.getElementById('checkout-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('chk-name').value;
+                const whatsapp = document.getElementById('chk-whatsapp').value;
+                const address = document.getElementById('chk-address').value;
+                const city = document.getElementById('chk-city').value;
+                const province = document.getElementById('chk-province').value;
+                const paymentMethod = document.getElementById('chk-payment-method').value;
+
+                const orderNum = 'LUX-' + Math.floor(1000 + Math.random() * 9000);
+                const subtotal = storeState.cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+                const delivery = subtotal >= 5000 ? 0 : 250;
+                const total = subtotal + delivery;
+
+                const confirmedOrder = {
+                    order_number: orderNum,
+                    customer_name: name,
+                    whatsapp_number: whatsapp,
+                    shipping_address: `${address}, ${city} (${province})`,
+                    payment_method: paymentMethod,
+                    subtotal: subtotal,
+                    delivery_fee: delivery,
+                    total_amount: total
+                };
+
+                document.getElementById('checkout-modal').classList.add('hidden');
+                document.getElementById('checkout-modal').classList.remove('flex');
+                renderReceipt(confirmedOrder);
+                storeState.cart = [];
+                saveCart();
+            });
+        }
+
+        function renderReceipt(order) {
+            const container = document.getElementById('receipt-content');
+            container.innerHTML = `
+                <div class="text-center pb-4 border-b border-gold/20">
+                    <h2 class="font-serif text-2xl font-bold tracking-widest">LUXERA</h2>
+                    <p class="text-[10px] text-gold uppercase tracking-widest mt-1">Official Order Confirmation Receipt</p>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                    <div><span class="text-charcoal/60">Order Number:</span> <span class="font-bold text-gold">${order.order_number}</span></div>
+                    <div><span class="text-charcoal/60">Date:</span> <span class="font-medium">${new Date().toLocaleDateString()}</span></div>
+                    <div><span class="text-charcoal/60">Customer:</span> <span class="font-medium">${order.customer_name}</span></div>
+                    <div><span class="text-charcoal/60">WhatsApp:</span> <span class="font-medium">${order.whatsapp_number}</span></div>
+                    <div class="col-span-2"><span class="text-charcoal/60">Delivery Address:</span> <span class="font-medium">${order.shipping_address}</span></div>
+                    <div class="col-span-2"><span class="text-charcoal/60">Payment Method:</span> <span class="font-bold text-gold">${order.payment_method}</span></div>
+                </div>
+                <div class="border-t border-gold/20 pt-4">
+                    <span class="font-bold uppercase mb-2 block text-gold">Ordered Items</span>
+                    <div class="space-y-2">
+                        ${storeState.cart.map(i => `
+                            <div class="flex justify-between items-center text-[11px]">
+                                <div><span>${i.name}</span> <span class="text-gold">(${i.variant_name})</span> x ${i.quantity}</div>
+                                <span class="font-semibold">Rs. ${(i.price * i.quantity).toLocaleString()}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="border-t border-gold/20 pt-4 space-y-1 text-xs">
+                    <div class="flex justify-between"><span>Subtotal:</span> <span>Rs. ${Number(order.subtotal).toLocaleString()}</span></div>
+                    <div class="flex justify-between"><span>Delivery Fee:</span> <span>${order.delivery_fee === 0 ? 'FREE' : 'Rs. ' + order.delivery_fee.toLocaleString()}</span></div>
+                    <div class="flex justify-between font-bold text-sm pt-2 border-t border-gold/20 text-gold"><span>Total Payable:</span> <span>Rs. ${Number(order.total_amount).toLocaleString()}</span></div>
+                </div>
+            `;
+
+            const waMsg = encodeURIComponent(`*LUXERA - NEW ORDER & PAYMENT NOTIFICATION*
+Order #: ${order.order_number}
+Name: ${order.customer_name}
+Phone: ${order.whatsapp_number}
+Address: ${order.shipping_address}
+Payment Method: ${order.payment_method}
+Total Amount: Rs. ${Number(order.total_amount).toLocaleString()}
+
+(Note: Manual payment transfer will be coordinated here after order confirmation).`);
+
+            document.getElementById('whatsapp-share-btn').onclick = () => {
+                window.open(`https://wa.me/923005460203?text=${waMsg}`, '_blank');
+            };
+            document.getElementById('print-receipt-btn').onclick = () => window.print();
+
+            document.getElementById('receipt-modal').classList.remove('hidden');
+            document.getElementById('receipt-modal').classList.add('flex');
+        }
+    </script>
+</body>
+</html>

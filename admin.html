@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Portal — LUXERA</title>
+    <title>Secure Admin Portal — LUXERA</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -37,168 +39,215 @@
 </head>
 <body class="bg-ivory text-charcoal antialiased">
 
-    <!-- Top Bar -->
-    <header class="bg-charcoal text-white py-4 px-6 flex justify-between items-center shadow-md">
-        <div class="flex items-center gap-3">
-            <span class="font-serif text-xl font-bold tracking-widest">LUXERA ADMIN</span>
-            <span class="bg-gold text-charcoal text-[10px] font-bold px-2 py-0.5 rounded uppercase">Management Portal</span>
-        </div>
-        <a href="index.html" class="text-xs uppercase tracking-widest text-gold hover:text-white transition-colors flex items-center gap-2">
-            <i class="fa-solid fa-store"></i> View Storefront
-        </a>
-    </header>
-
-    <!-- Main Admin Dashboard Container -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
-
-        <!-- Tabs Navigation -->
-        <div class="flex border-b border-gold/30 gap-6 text-xs uppercase tracking-widest font-semibold">
-            <button onclick="switchTab('products')" id="tab-products-btn" class="pb-3 border-b-2 border-gold text-gold transition-all">Manage Products</button>
-            <button onclick="switchTab('categories')" id="tab-categories-btn" class="pb-3 border-b-2 border-transparent text-charcoal/60 hover:text-charcoal transition-all">Manage Categories</button>
-            <button onclick="switchTab('orders')" id="tab-orders-btn" class="pb-3 border-b-2 border-transparent text-charcoal/60 hover:text-charcoal transition-all">Customer Orders</button>
-        </div>
-
-        <!-- SECTION 1: PRODUCTS MANAGEMENT -->
-        <section id="section-products" class="space-y-8">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-lg shadow-sm border border-gold/20">
+    <!-- AUTHENTICATION SCREEN (Hidden if logged in) -->
+    <div id="auth-screen" class="fixed inset-0 z-50 bg-charcoal flex items-center justify-center p-4">
+        <div class="bg-ivory max-w-md w-full p-8 rounded-lg shadow-2xl border border-gold/30">
+            <div class="text-center mb-8">
+                <h2 class="font-serif text-3xl font-bold tracking-widest text-charcoal">LUXERA</h2>
+                <p class="text-[10px] uppercase tracking-widest text-gold mt-1 font-semibold">Secure Admin Authentication</p>
+            </div>
+            <form id="login-form" class="space-y-4 text-xs uppercase tracking-wider">
                 <div>
-                    <h2 class="font-serif text-xl font-bold tracking-wide">Add New Luxury Product</h2>
-                    <p class="text-xs text-charcoal/60 uppercase tracking-wider mt-1">Publish new items instantly to your storefront catalogue.</p>
+                    <label class="block font-semibold mb-1">Admin Email *</label>
+                    <input type="email" id="admin-email" required placeholder="admin@luxera.com" class="w-full bg-white border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold">
                 </div>
-            </div>
-
-            <!-- Add Product Form -->
-            <form id="add-product-form" class="bg-white p-8 rounded-lg shadow-sm border border-gold/20 space-y-4 text-xs uppercase tracking-wider">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block font-semibold mb-1">Product Name *</label>
-                        <input type="text" id="prod-name" required placeholder="e.g. Royal Gold Watch" class="w-full bg-ivory border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block font-semibold mb-1">Category *</label>
-                        <select id="prod-category" required class="w-full bg-ivory border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold"></select>
-                    </div>
-                    <div>
-                        <label class="block font-semibold mb-1">Primary Image URL *</label>
-                        <input type="url" id="prod-img" required placeholder="https://images.unsplash.com/..." class="w-full bg-ivory border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold">
-                    </div>
+                <div>
+                    <label class="block font-semibold mb-1">Password *</label>
+                    <input type="password" id="admin-password" required placeholder="••••••••" class="w-full bg-white border border-gold/30 p-3 text-sm font-sans focus:outline-none focus:border-gold">
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block font-semibold mb-1">Regular Price (Rs.) *</label>
-                        <input type="number" id="prod-reg-price" required placeholder="15000" class="w-full bg-ivory border border-gold/30 p-3 text-sm font-sans focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block font-semibold mb-1">Sale Price (Optional, Rs.)</label>
-                        <input type="number" id="prod-sale-price" placeholder="12999" class="w-full bg-ivory border border-gold/30 p-3 text-sm font-sans focus:outline-none focus:border-gold">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block font-semibold mb-1">Colors / Finishes (Comma separated)</label>
-                        <input type="text" id="prod-colors" placeholder="Gold, Silver, Black" class="w-full bg-ivory border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block font-semibold mb-1">Sizes / Capacities (Comma separated)</label>
-                        <input type="text" id="prod-sizes" placeholder="Small, Medium, Large" class="w-full bg-ivory border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold">
-                    </div>
-                </div>
-                <button type="submit" class="bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs px-8 py-4 transition-all shadow-md mt-2">Publish Product</button>
+                <button type="submit" class="w-full bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs py-4 transition-all shadow-md mt-4">Login to Dashboard</button>
+                <div id="auth-error" class="text-red-600 text-center text-[11px] mt-2 hidden"></div>
             </form>
+        </div>
+    </div>
 
-            <!-- Existing Products List Table -->
-            <div class="bg-white rounded-lg shadow-sm border border-gold/20 overflow-hidden">
-                <div class="p-6 border-b border-gold/20">
-                    <h3 class="font-serif text-lg font-bold tracking-wide">Existing Catalogue Items</h3>
+    <!-- MAIN ADMIN DASHBOARD (Hidden until authenticated) -->
+    <div id="admin-dashboard" class="hidden min-h-screen flex flex-col justify-between">
+        <div>
+            <!-- Top Bar -->
+            <header class="bg-charcoal text-white py-4 px-6 flex justify-between items-center shadow-md">
+                <div class="flex items-center gap-3">
+                    <span class="font-serif text-xl font-bold tracking-widest">LUXERA ADMIN</span>
+                    <span class="bg-gold text-charcoal text-[10px] font-bold px-2 py-0.5 rounded uppercase">Secure Portal</span>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs uppercase tracking-wider">
-                        <thead class="bg-cream text-charcoal font-semibold border-b border-gold/20">
-                            <tr>
-                                <th class="p-4">Image</th>
-                                <th class="p-4">Product Name</th>
-                                <th class="p-4">Category</th>
-                                <th class="p-4">Price</th>
-                                <th class="p-4 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-product-table-body" class="divide-y divide-gold/10"></tbody>
-                    </table>
+                <div class="flex items-center gap-4">
+                    <a href="index.html" target="_blank" class="text-xs uppercase tracking-widest text-gold hover:text-white transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-store"></i> Storefront
+                    </a>
+                    <button onclick="adminLogout()" class="text-xs uppercase tracking-widest text-red-400 hover:text-red-200"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
                 </div>
-            </div>
-        </section>
+            </header>
 
-        <!-- SECTION 2: CATEGORIES MANAGEMENT -->
-        <section id="section-categories" class="space-y-8 hidden">
-            <div class="bg-white p-8 rounded-lg shadow-sm border border-gold/20">
-                <h2 class="font-serif text-xl font-bold tracking-wide mb-4">Add New Category</h2>
-                <form id="add-category-form" class="flex gap-4 items-end">
-                    <div class="flex-1">
-                        <label class="block font-semibold mb-1 text-xs uppercase tracking-wider">Category Name *</label>
-                        <input type="text" id="cat-name" required placeholder="e.g. Cufflinks" class="w-full bg-ivory border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold">
+            <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+                <!-- Tabs -->
+                <div class="flex border-b border-gold/30 gap-6 text-xs uppercase tracking-widest font-semibold overflow-x-auto">
+                    <button onclick="switchTab('products')" id="tab-products-btn" class="pb-3 border-b-2 border-gold text-gold transition-all shrink-0">Manage Products</button>
+                    <button onclick="switchTab('categories')" id="tab-categories-btn" class="pb-3 border-b-2 border-transparent text-charcoal/60 hover:text-charcoal transition-all shrink-0">Categories</button>
+                    <button onclick="switchTab('banners')" id="tab-banners-btn" class="pb-3 border-b-2 border-transparent text-charcoal/60 hover:text-charcoal transition-all shrink-0">Banners & Sale</button>
+                    <button onclick="switchTab('orders')" id="tab-orders-btn" class="pb-3 border-b-2 border-transparent text-charcoal/60 hover:text-charcoal transition-all shrink-0">Customer Orders</button>
+                </div>
+
+                <!-- 1. PRODUCTS SECTION -->
+                <section id="section-products" class="space-y-8">
+                    <div class="bg-white p-8 rounded-lg shadow-sm border border-gold/20">
+                        <h2 class="font-serif text-xl font-bold tracking-wide mb-4">Add New Luxury Product (Direct Image Upload)</h2>
+                        <form id="add-product-form" class="space-y-4 text-xs uppercase tracking-wider">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block font-semibold mb-1">Product Name *</label>
+                                    <input type="text" id="prod-name" required placeholder="Royal Gold Watch" class="w-full bg-ivory border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold mb-1">Category *</label>
+                                    <select id="prod-category" required class="w-full bg-ivory border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold"></select>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block font-semibold mb-1">Regular Price (Rs.) *</label>
+                                    <input type="number" id="prod-reg-price" required placeholder="15000" class="w-full bg-ivory border border-gold/30 p-3 text-sm font-sans focus:outline-none focus:border-gold">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold mb-1">Sale Price (Optional, Rs.)</label>
+                                    <input type="number" id="prod-sale-price" placeholder="12999" class="w-full bg-ivory border border-gold/30 p-3 text-sm font-sans focus:outline-none focus:border-gold">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block font-semibold mb-1">Upload Product Image (File) *</label>
+                                    <input type="file" id="prod-file" accept="image/*" required class="w-full bg-ivory border border-gold/30 p-2.5 text-xs font-sans focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold mb-1">Colors / Finishes (Comma separated)</label>
+                                    <input type="text" id="prod-colors" placeholder="Gold, Silver, Black" class="w-full bg-ivory border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Sizes / Capacities (Comma separated)</label>
+                                <input type="text" id="prod-sizes" placeholder="Small, Medium, Large" class="w-full bg-ivory border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold">
+                            </div>
+                            <button type="submit" id="publish-btn" class="bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs px-8 py-4 transition-all shadow-md">Publish Product</button>
+                        </form>
                     </div>
-                    <button type="submit" class="bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs px-8 py-3.5 transition-all shadow-md">Add Category</button>
-                </form>
-            </div>
 
-            <div class="bg-white rounded-lg shadow-sm border border-gold/20 overflow-hidden">
-                <div class="p-6 border-b border-gold/20">
-                    <h3 class="font-serif text-lg font-bold tracking-wide">Active Store Categories</h3>
-                </div>
-                <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-4" id="admin-category-grid"></div>
-            </div>
-        </section>
+                    <div class="bg-white rounded-lg shadow-sm border border-gold/25 overflow-hidden">
+                        <div class="p-6 border-b border-gold/20"><h3 class="font-serif text-lg font-bold tracking-wide">Catalogue Items</h3></div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs uppercase tracking-wider">
+                                <thead class="bg-cream text-charcoal font-semibold border-b border-gold/20">
+                                    <tr><th class="p-4">Image</th><th class="p-4">Name</th><th class="p-4">Category</th><th class="p-4">Price</th><th class="p-4 text-right">Actions</th></tr>
+                                </thead>
+                                <tbody id="admin-product-table" class="divide-y divide-gold/10"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
 
-        <!-- SECTION 3: CUSTOMER ORDERS -->
-        <section id="section-orders" class="space-y-6 hidden">
-            <div class="bg-white rounded-lg shadow-sm border border-gold/20 overflow-hidden">
-                <div class="p-6 border-b border-gold/20 flex justify-between items-center">
-                    <h3 class="font-serif text-lg font-bold tracking-wide">Customer Orders Log</h3>
-                    <button onclick="clearOrders()" class="text-[10px] text-red-600 hover:underline uppercase font-bold">Clear All Orders</button>
-                </div>
-                <div id="admin-orders-container" class="p-6 space-y-4"></div>
-            </div>
-        </section>
+                <!-- 2. CATEGORIES SECTION -->
+                <section id="section-categories" class="space-y-8 hidden">
+                    <div class="bg-white p-8 rounded-lg shadow-sm border border-gold/20">
+                        <h2 class="font-serif text-xl font-bold tracking-wide mb-4">Add Category</h2>
+                        <form id="add-category-form" class="flex gap-4 items-end">
+                            <div class="flex-1">
+                                <label class="block font-semibold mb-1 text-xs uppercase tracking-wider">Category Name *</label>
+                                <input type="text" id="cat-name" required placeholder="Cufflinks" class="w-full bg-ivory border border-gold/30 p-3 text-sm lowercase font-sans focus:outline-none focus:border-gold">
+                            </div>
+                            <button type="submit" class="bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs px-8 py-3.5 transition-all shadow-md">Add</button>
+                        </form>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-sm border border-gold/20 p-6 grid grid-cols-1 md:grid-cols-3 gap-4" id="admin-category-grid"></div>
+                </section>
 
-    </main>
+                <!-- 3. BANNERS & SALE MANAGEMENT SECTION -->
+                <section id="section-banners" class="space-y-8 hidden">
+                    <div class="bg-white p-8 rounded-lg shadow-sm border border-gold/20">
+                        <h2 class="font-serif text-xl font-bold tracking-wide mb-4">Store Announcement Banner & Sale Settings</h2>
+                        <form id="banner-form" class="space-y-4 text-xs uppercase tracking-wider">
+                            <div>
+                                <label class="block font-semibold mb-1">Top Announcement Bar Text *</label>
+                                <input type="text" id="setting-announcement" placeholder="Complimentary Free Shipping on Orders Above Rs. 5,000 | WhatsApp: 03005460203" class="w-full bg-ivory border border-gold/30 p-3 text-xs lowercase font-sans focus:outline-none focus:border-gold">
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block font-semibold mb-1">Hero Section Title *</label>
+                                    <input type="text" id="setting-hero-title" placeholder="TIMELINE OF ELEGANCE" class="w-full bg-ivory border border-gold/30 p-3 text-xs lowercase font-sans focus:outline-none focus:border-gold">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold mb-1">Hero Section Subtitle *</label>
+                                    <input type="text" id="setting-hero-subtitle" placeholder="Discover curated luxury men's accessories..." class="w-full bg-ivory border border-gold/30 p-3 text-xs lowercase font-sans focus:outline-none focus:border-gold">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Global Sale Banner Tag (Leave blank to disable)</label>
+                                <input type="text" id="setting-sale-tag" placeholder="SUMMER LUXURY SALE - UP TO 25% OFF" class="w-full bg-ivory border border-gold/30 p-3 text-xs lowercase font-sans focus:outline-none focus:border-gold">
+                            </div>
+                            <button type="submit" class="bg-gold hover:bg-gold-dark text-charcoal font-semibold uppercase tracking-widest text-xs px-8 py-3.5 transition-all shadow-md">Save Banner & Sale Settings</button>
+                        </form>
+                    </div>
+                </section>
 
-    <!-- Admin Portal Script -->
+                <!-- 4. ORDERS SECTION -->
+                <section id="section-orders" class="space-y-6 hidden">
+                    <div class="bg-white rounded-lg shadow-sm border border-gold/20 overflow-hidden">
+                        <div class="p-6 border-b border-gold/20 flex justify-between items-center">
+                            <h3 class="font-serif text-lg font-bold tracking-wide">Customer Orders Log</h3>
+                            <button onclick="clearOrders()" class="text-[10px] text-red-600 hover:underline uppercase font-bold">Clear Orders</button>
+                        </div>
+                        <div id="admin-orders-container" class="p-6 space-y-4"></div>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <footer class="bg-charcoal text-white text-center py-4 text-xs font-light">
+            &copy; 2026 LUXERA Secure Admin Portal.
+        </footer>
+    </div>
+
+    <!-- SUPABASE CONFIG & LOGIC -->
     <script>
-        const defaultCategories = [
-            { id: 'cat-watches', name: 'Watches' },
-            { id: 'cat-perfumes', name: 'Perfumes' },
-            { id: 'cat-clothing', name: 'Clothing' },
-            { id: 'cat-wallets', name: 'Wallets' }
-        ];
+        // Supabase Credentials (Replace with your actual Supabase URL and Anon Key)
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const defaultProducts = [
-            {
-                id: 'p1', category_id: 'cat-watches', name: 'Royal Chronograph Gold', regular_price: 18500, sale_price: 14999,
-                primary_image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600',
-                gallery: ['https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600'],
-                colors: ['Yellow Gold', 'Rose Gold'], sizes: ['40mm', '42mm']
-            },
-            {
-                id: 'p2', category_id: 'cat-perfumes', name: 'Oud Al Sultan Eau de Parfum', regular_price: 9500, sale_price: null,
-                primary_image: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600',
-                gallery: ['https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600'],
-                colors: ['Amber'], sizes: ['100ml']
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check active session
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                loadAdminData();
             }
-        ];
 
-        let adminState = {
-            categories: JSON.parse(localStorage.getItem('luxera_categories') || JSON.stringify(defaultCategories)),
-            products: JSON.parse(localStorage.getItem('luxera_products') || JSON.stringify(defaultProducts)),
-            orders: JSON.parse(localStorage.getItem('luxera_orders') || '[]')
-        };
+            // Login form listener
+            document.getElementById('login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('admin-email').value;
+                const password = document.getElementById('admin-password').value;
+                const errBox = document.getElementById('auth-error');
 
-        document.addEventListener('DOMContentLoaded', () => {
-            renderAdminData();
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) {
+                    errBox.innerText = error.message;
+                    errBox.classList.remove('hidden');
+                } else {
+                    document.getElementById('auth-screen').classList.add('hidden');
+                    document.getElementById('admin-dashboard').classList.remove('hidden');
+                    loadAdminData();
+                }
+            });
+
             initAdminForms();
         });
 
+        async function adminLogout() {
+            await supabaseClient.auth.signOut();
+            window.location.reload();
+        }
+
         function switchTab(tab) {
-            ['products', 'categories', 'orders'].forEach(t => {
+            ['products', 'categories', 'banners', 'orders'].forEach(t => {
                 document.getElementById(`section-${t}`).classList.add('hidden');
                 document.getElementById(`tab-${t}-btn`).classList.remove('border-gold', 'text-gold');
                 document.getElementById(`tab-${t}-btn`).classList.add('border-transparent', 'text-charcoal/60');
@@ -208,134 +257,155 @@
             document.getElementById(`tab-${tab}-btn`).classList.remove('border-transparent', 'text-charcoal/60');
         }
 
-        function renderAdminData() {
-            // Category Dropdown in Product Form
+        async function loadAdminData() {
+            // Load Categories
+            let categories = JSON.parse(localStorage.getItem('luxera_categories') || '[]');
             const catSelect = document.getElementById('prod-category');
-            catSelect.innerHTML = adminState.categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            catSelect.innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
 
-            // Products Table
-            const prodTable = document.getElementById('admin-product-table-body');
-            prodTable.innerHTML = adminState.products.map(p => `
+            const catGrid = document.getElementById('admin-category-grid');
+            catGrid.innerHTML = categories.map(c => `
+                <div class="flex justify-between items-center bg-cream p-4 rounded border border-gold/20 text-xs uppercase font-bold">
+                    <span>${c.name}</span>
+                    <button onclick="deleteCategory('${c.id}')" class="text-red-600"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+
+            // Load Products
+            let products = JSON.parse(localStorage.getItem('luxera_products') || '[]');
+            const prodTable = document.getElementById('admin-product-table');
+            prodTable.innerHTML = products.map(p => `
                 <tr class="hover:bg-cream/50">
                     <td class="p-4"><img src="${p.primary_image}" class="w-12 h-12 object-cover rounded"></td>
                     <td class="p-4 font-bold">${p.name}</td>
-                    <td class="p-4">${getCatName(p.category_id)}</td>
+                    <td class="p-4">${p.category_id}</td>
                     <td class="p-4 font-semibold text-gold">Rs. ${Number(p.sale_price || p.regular_price).toLocaleString()}</td>
-                    <td class="p-4 text-right">
-                        <button onclick="deleteProduct('${p.id}')" class="text-red-600 hover:text-red-800 p-2"><i class="fa-solid fa-trash"></i></button>
-                    </td>
+                    <td class="p-4 text-right"><button onclick="deleteProduct('${p.id}')" class="text-red-600 p-2"><i class="fa-solid fa-trash"></i></button></td>
                 </tr>
             `).join('');
 
-            // Categories Grid
-            const catGrid = document.getElementById('admin-category-grid');
-            catGrid.innerHTML = adminState.categories.map(c => `
-                <div class="flex justify-between items-center bg-cream p-4 rounded border border-gold/20">
-                    <span class="font-bold uppercase text-xs tracking-wider">${c.name}</span>
-                    <button onclick="deleteCategory('${c.id}')" class="text-red-600 hover:text-red-800 text-xs"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            `).join('');
+            // Load Banners Settings
+            const settings = JSON.parse(localStorage.getItem('luxera_settings') || '{}');
+            document.getElementById('setting-announcement').value = settings.announcement || '';
+            document.getElementById('setting-hero-title').value = settings.heroTitle || '';
+            document.getElementById('setting-hero-subtitle').value = settings.heroSubtitle || '';
+            document.getElementById('setting-sale-tag').value = settings.saleTag || '';
 
-            // Orders List
+            // Load Orders
+            let orders = JSON.parse(localStorage.getItem('luxera_orders') || '[]');
             const ordersContainer = document.getElementById('admin-orders-container');
-            if (adminState.orders.length === 0) {
-                ordersContainer.innerHTML = `<div class="text-center py-8 text-charcoal/50 text-xs uppercase">No customer orders recorded yet.</div>`;
-                return;
+            if (orders.length === 0) {
+                ordersContainer.innerHTML = `<div class="text-center py-8 text-charcoal/50 text-xs uppercase">No customer orders yet.</div>`;
+            } else {
+                ordersContainer.innerHTML = orders.map(o => `
+                    <div class="bg-cream p-6 rounded-lg border border-gold/20 text-xs uppercase tracking-wider space-y-1">
+                        <div class="flex justify-between font-bold border-b border-gold/20 pb-2 text-gold">
+                            <span>Order #${o.order_number}</span><span>Rs. ${Number(o.total_amount).toLocaleString()} (${o.payment_method})</span>
+                        </div>
+                        <div><strong>Customer:</strong> ${o.customer_name} (${o.whatsapp_number})</div>
+                        <div><strong>Address:</strong> ${o.shipping_address}</div>
+                    </div>
+                `).join('');
             }
-
-            ordersContainer.innerHTML = adminState.orders.map(o => `
-                <div class="bg-cream p-6 rounded-lg border border-gold/20 text-xs uppercase tracking-wider space-y-2">
-                    <div class="flex justify-between font-bold border-b border-gold/20 pb-2">
-                        <span class="text-gold">Order #${o.order_number}</span>
-                        <span>Date: ${o.date || new Date().toLocaleDateString()}</span>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <div><strong>Customer:</strong> ${o.customer_name}</div>
-                        <div><strong>WhatsApp:</strong> ${o.whatsapp_number}</div>
-                        <div class="col-span-2"><strong>Address:</strong> ${o.shipping_address}</div>
-                        <div><strong>Payment Method:</strong> <span class="text-gold font-bold">${o.payment_method}</span></div>
-                        <div><strong>Total Amount:</strong> <span class="font-bold">Rs. ${Number(o.total_amount).toLocaleString()}</span></div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function getCatName(catId) {
-            const cat = adminState.categories.find(c => c.id === catId);
-            return cat ? cat.name : 'General';
         }
 
         function initAdminForms() {
-            document.getElementById('add-product-form').addEventListener('submit', (e) => {
+            // Add Product Form with Supabase Storage File Upload
+            document.getElementById('add-product-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                const btn = document.getElementById('publish-btn');
+                btn.innerText = 'Uploading Image & Publishing...';
+                btn.disabled = true;
+
                 const name = document.getElementById('prod-name').value;
                 const category_id = document.getElementById('prod-category').value;
-                const primary_image = document.getElementById('prod-img').value;
                 const regular_price = Number(document.getElementById('prod-reg-price').value);
-                const sale_price_val = document.getElementById('prod-sale-price').value;
-                const sale_price = sale_price_val ? Number(sale_price_val) : null;
+                const sale_val = document.getElementById('prod-sale-price').value;
+                const sale_price = sale_val ? Number(sale_val) : null;
                 const colors = document.getElementById('prod-colors').value.split(',').map(s => s.trim()).filter(Boolean);
                 const sizes = document.getElementById('prod-sizes').value.split(',').map(s => s.trim()).filter(Boolean);
+                const fileInput = document.getElementById('prod-file').files[0];
 
-                const newProd = {
+                let imageUrl = '';
+                if (fileInput) {
+                    const fileName = `prod_${Date.now()}_${fileInput.name}`;
+                    const { data, error } = await supabaseClient.storage.from('products').upload(fileName, fileInput);
+                    if (error) {
+                        alert('Image upload failed: ' + error.message);
+                        btn.innerText = 'Publish Product';
+                        btn.disabled = false;
+                        return;
+                    }
+                    const { data: publicURLData } = supabaseClient.storage.from('products').getPublicUrl(fileName);
+                    imageUrl = publicURLData.publicUrl;
+                }
+
+                let products = JSON.parse(localStorage.getItem('luxera_products') || '[]');
+                products.push({
                     id: 'p_' + Date.now(),
                     category_id,
                     name,
                     regular_price,
                     sale_price,
-                    primary_image,
-                    gallery: [primary_image],
+                    primary_image: imageUrl,
+                    gallery: [imageUrl],
                     colors: colors.length > 0 ? colors : ['Standard'],
                     sizes: sizes.length > 0 ? sizes : ['Standard']
-                };
+                });
 
-                adminState.products.push(newProd);
-                localStorage.setItem('luxera_products', JSON.stringify(adminState.products));
-                renderAdminData();
-                e.target.reset();
-                alert('Product published successfully!');
+                localStorage.setItem('luxera_products', JSON.stringify(products));
+                alert('Product successfully published with Supabase storage image!');
+                window.location.reload();
             });
 
+            // Add Category
             document.getElementById('add-category-form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 const name = document.getElementById('cat-name').value.trim();
-                if (!name) return;
                 const id = 'cat_' + name.toLowerCase().replace(/\s+/g, '_');
+                let categories = JSON.parse(localStorage.getItem('luxera_categories') || '[]');
+                categories.push({ id, name });
+                localStorage.setItem('luxera_categories', JSON.stringify(categories));
+                alert('Category added!');
+                window.location.reload();
+            });
 
-                if (adminState.categories.some(c => c.id === id || c.name.toLowerCase() === name.toLowerCase())) {
-                    alert('Category already exists.');
-                    return;
-                }
-
-                adminState.categories.push({ id, name });
-                localStorage.setItem('luxera_categories', JSON.stringify(adminState.categories));
-                renderAdminData();
-                e.target.reset();
-                alert('Category added successfully!');
+            // Banner & Sale Settings
+            document.getElementById('banner-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const settings = {
+                    announcement: document.getElementById('setting-announcement').value,
+                    heroTitle: document.getElementById('setting-hero-title').value,
+                    heroSubtitle: document.getElementById('setting-hero-subtitle').value,
+                    saleTag: document.getElementById('setting-sale-tag').value
+                };
+                localStorage.setItem('luxera_settings', JSON.stringify(settings));
+                alert('Store banners & sale settings saved successfully!');
             });
         }
 
         function deleteProduct(id) {
-            if (confirm('Are you sure you want to delete this product?')) {
-                adminState.products = adminState.products.filter(p => p.id !== id);
-                localStorage.setItem('luxera_products', JSON.stringify(adminState.products));
-                renderAdminData();
+            if (confirm('Delete this product?')) {
+                let products = JSON.parse(localStorage.getItem('luxera_products') || '[]');
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem('luxera_products', JSON.stringify(products));
+                loadAdminData();
             }
         }
 
         function deleteCategory(id) {
-            if (confirm('Are you sure you want to delete this category?')) {
-                adminState.categories = adminState.categories.filter(c => c.id !== id);
-                localStorage.setItem('luxera_categories', JSON.stringify(adminState.categories));
-                renderAdminData();
+            if (confirm('Delete category?')) {
+                let categories = JSON.parse(localStorage.getItem('luxera_categories') || '[]');
+                categories = categories.filter(c => c.id !== id);
+                localStorage.setItem('luxera_categories', JSON.stringify(categories));
+                loadAdminData();
             }
         }
 
         function clearOrders() {
-            if (confirm('Clear all order logs?')) {
-                adminState.orders = [];
+            if (confirm('Clear all orders?')) {
                 localStorage.removeItem('luxera_orders');
-                renderAdminData();
+                loadAdminData();
             }
         }
     </script>
